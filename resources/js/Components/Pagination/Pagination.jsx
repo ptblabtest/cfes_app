@@ -1,6 +1,5 @@
 import React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
-import PropTypes from "prop-types";
 
 const Pagination = ({ currentPage, totalPages, itemsPerPage, totalItems, onPageChange }) => {
     const handlePageClick = (page) => {
@@ -18,7 +17,6 @@ const Pagination = ({ currentPage, totalPages, itemsPerPage, totalItems, onPageC
 
     return (
         <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-            {/* Detailed view for all sizes */}
             <div>
                 <p className="text-sm text-gray-700">
                     Showing <span className="font-medium">{startItem}</span> to <span className="font-medium">{endItem}</span> of <span className="font-medium">{totalItems}</span> results
@@ -55,12 +53,6 @@ const Pagination = ({ currentPage, totalPages, itemsPerPage, totalItems, onPageC
             </div>
         </div>
     );
-};
-
-Pagination.propTypes = {
-    currentPage: PropTypes.number.isRequired,
-    totalPages: PropTypes.number.isRequired,
-    onPageChange: PropTypes.func.isRequired,
 };
 
 export default Pagination;

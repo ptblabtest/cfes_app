@@ -1,14 +1,13 @@
 import React from "react";
-import ItemRenderer from "../Render/ItemRenderer"; // Import ItemRenderer
+import ItemRenderer from "../Render/ItemRenderer";
 import { Link } from "@inertiajs/react";
 
-const GridItem = ({ item, fields, entity }) => {
-    const imageSize = { width: "100%", height: "100%" }; // Define the size here
-    const showUrl = `/${entity}/show/${item.id}`; // Construct the URL for the "show" page
+const GridItem = ({ item, fields}) => {
+    const imageSize = { width: "100%", height: "100%" };
 
     return (
-        <div className="group relative mt-6 bg-white shadow rounded-lg overflow-hidden">
-            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+        <Link href={item.showUrl} className="group relative mt-6 bg-white shadow rounded-lg overflow-hidden">
+            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                 {fields.image && (
                     <ItemRenderer
                         item={item}
@@ -18,9 +17,10 @@ const GridItem = ({ item, fields, entity }) => {
                     />
                 )}
             </div>
-            <Link href={showUrl} className="m-4 flex justify-between">
+
+            <div className="m-4 flex justify-between">
                 <div>
-                    {Object.keys(fields).map((fieldKey, index) => {
+                    {Object.keys(fields || {}).map((fieldKey, index) => {
                         if (fieldKey !== "image") {
                             return (
                                 <div key={fieldKey}>
@@ -45,8 +45,8 @@ const GridItem = ({ item, fields, entity }) => {
                         return null;
                     })}
                 </div>
-            </Link>
-        </div>
+            </div>
+        </Link>
     );
 };
 

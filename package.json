@@ -22,8 +22,11 @@
     "dependencies": {
         "@heroicons/react": "^2.1.1",
         "@inertiajs/inertia": "^0.11.1",
+        "chart.js": "^4.4.1",
         "heroicons": "^2.1.1",
         "ol": "^8.2.0",
-        "prop-types": "^15.8.1"
+        "prop-types": "^15.8.1",
+        "react-chartjs-2": "^5.2.0",
+        "react-router-dom": "^6.22.0"
     }
 }

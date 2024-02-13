@@ -4,26 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Client extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, LogsActivity,InteractsWithMedia;
 
     public $timestamps = false;
-    protected $fillable = ['name', 'address', 'phone'];
+    protected $fillable = ['name', 'address', 'phone', 'cp_name', 'cp_email', 'cp_phone'];
 
-    public function clientcontact (){
-        return $this->hasMany(ClientContact::class,'client_id');
+    protected static $logFillable = true;
+    protected static $logOnlyDirty = true;
+    protected static $logName = 'List Klien';
 
-    }
-
-    public function getImageUrlAttribute()
+    public function getActivitylogOptions(): LogOptions
     {
-        // Use 'default' as the collection name
-        return $this->getFirstMediaUrl();
+        return LogOptions::defaults();
     }
 
-    
+
 }

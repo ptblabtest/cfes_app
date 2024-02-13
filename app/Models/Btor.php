@@ -4,31 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Btor extends Model
+class Btor extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, SoftDeletes, LogsActivity, InteractsWithMedia;
 
     protected $fillable = [
-        'tor_id', 'start_date', 'end_date', 'location_id', 'description', 'sch_detail',
-        'followup', 'image', 'file', 'cost'
+        'project_id', 'start_date', 'end_date', 'cost', 'approval_status', 'created_by'
     ];
-
 
     public function createdby()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-    public function tor()
+    
+    public function project()
     {
-        return $this->belongsTo(Tor::class);
-    }
-
-    public function location()
-    {
-        return $this->belongsTo(Location::class, 'location_id');
+        return $this->belongsTo(Project::class);
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -36,25 +33,8 @@ class Btor extends Model
         return LogOptions::defaults();
     }
 
-    // Log all changes
     protected static $logFillable = true;
-
-    // Only the changed attributes will be saved in the log
     protected static $logOnlyDirty = true;
+    protected static $logName = 'BTOR';
 
-    // Optionally give a name to the log
-    protected static $logName = 'tor';
-
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($btor) {
-            if (auth()->check()) {
-                $btor->created_by = auth()->id();
-            }
-            $btor->project_status = 'Draft';
-        });
-    }
 }

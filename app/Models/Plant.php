@@ -4,23 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Plant extends Model
+class Plant extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia, LogsActivity;
 
     public $timestamps = false;
     protected $fillable = [
-        'name', 'species_name', 'description', 'image', 'iucn_id', 'cites_id', 'usage'
+        'name', 'species_name', 'description', 'iucn_id', 'cites_id', 'usage'
     ];
 
-    public function iucn()
+    protected static $logFillable = true;
+    protected static $logOnlyDirty = true;
+    protected static $logName = 'Tumbuhan';
+
+    public function getActivitylogOptions(): LogOptions
     {
-        return $this->belongsTo(Option::class, 'iucn_id');
+        return LogOptions::defaults();
     }
 
-    public function cites()
-    {
-        return $this->belongsTo(Option::class, 'cites_id');
-    }
+
 }

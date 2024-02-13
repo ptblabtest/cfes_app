@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tor;
-use App\Traits\ExportImport;
+use App\Services\EntityService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Config;
@@ -11,150 +10,162 @@ use Spatie\MediaLibrary\HasMedia;
 
 class DisplayController extends Controller
 {
+    protected $entityService;
+    protected $config;
 
-    use ExportImport;
+    public function __construct(EntityService $entityService)
+    {
+        $this->entityService = $entityService;
+        $this->config = Config::get("models");
+    }
 
     public function index($entity)
     {
-        $config = Config::get("models.{$entity}");
+        $config = $this->config[$entity] ?? null;
         abort_unless($config, 404);
 
-        $itemsQuery = !empty($config['relationship'])
-            ? $config['class']::with($config['relationship'])
-            : new $config['class'];
+        $items = $this->entityService->getItems($entity, $config);
 
-        $items = $itemsQuery->get();
-
-        if (in_array(HasMedia::class, class_implements($config['class']))) {
-            $items->load('media');
+        if (in_array(HasMedia::class, class_implements($config['model']))) {
+            $items = $this->entityService->loadMediaForItems($items, $config['model']);
         }
 
-        $user = auth()->user()->load('roles');
+        $items->transform(function ($item) use ($entity) {
+            $item->showUrl = url("/{$entity}/show/{$item->id}");
+            return $item;
+        });
 
-        return Inertia::render($config['view']['index'], [
+        $createUrl = url("/{$entity}/create");
+        $exportUrl = url("/{$entity}/export");
+
+        return Inertia::render('Display/Index/Index', [
             'items' => $items,
             'entity' => $entity,
-            'fields' => $config['index']['fields'],
+            'tables' => $config['index']['tables'] ?? null,
+            'grids' => $config['index']['grids'] ?? null,
             'title' => $config['title'],
-            'auth' => ['user' => $user],
+            'createUrl' => $createUrl ?? null,
+            'exportUrl' => $exportUrl ?? null,
+            'auth' => ['user' => auth()->user()],
         ]);
     }
 
     public function show($entity, $id)
     {
-        $config = Config::get("models.{$entity}");
+        $config = $this->config[$entity] ?? null;
         abort_unless($config, 404);
-    
-        // Dynamically fetch the model and its related data
-        $modelClass = $config['class'];
-        $relatedEntity = $config['relation_show']['relation'] ?? null;
-    
-        // Load the main item and its relation if specified
-        $item = $relatedEntity ? $modelClass::with($relatedEntity)->findOrFail($id) : $modelClass::findOrFail($id);
-    
-        if (in_array(HasMedia::class, class_implements($modelClass))) {
-            $item->load('media');
-        }
-    
+
+        $item = $this->entityService->getItem($entity, $id, $config);
+
+        $item = $this->entityService->loadMediaForItem($item, $config['model']);
+
+    // Retrieve URLs for all images in the 'image' collection
+    $imageUrls = $item->getMedia('image')->map(function ($media) {
+        return $media->getUrl();
+    })->toArray();
+
+        $editUrl = url("/{$entity}/edit/{$id}");
+
         return Inertia::render($config['view']['show'], [
             'entity' => $entity,
             'item' => $item,
-            'fields' => $config['show']['fields'],
-            'relation_show' => $config['relation_show'] ?? null,
-            'title' => "View " . $config['title'],
+            'cards' => $config['show']['cards'],
+            'editUrl' => $editUrl,
+            'imageUrls' => $imageUrls,
+            'title' => $config['title'],
             'auth' => ['user' => auth()->user()],
         ]);
     }
-    
-    
-    
 
     public function create($entity)
     {
-        $config = Config::get("models.{$entity}");
+        $config = $this->config[$entity] ?? null;
         abort_unless($config && isset($config['form']), 404);
+
+        $storeUrl = url("/{$entity}");
 
         return Inertia::render($config['view']['form'], [
             'entity' => $entity,
-            'fields' => $config['form']['fields'],
-            'title' => "Create " . $config['title'],
+            'sections' => $config['form']['sections'] ?? null,
+            'fields' => $config['form']['fields'] ?? null,
+            'title' => $config['title'],
+            'storeUrl' => $storeUrl,
             'auth' => ['user' => auth()->user()],
         ]);
     }
 
     public function edit($entity, $id)
     {
-        $config = Config::get("models.{$entity}");
+        $config = $this->config[$entity] ?? null;
         abort_unless($config && isset($config['form']), 404);
 
-        $item = $config['class']::findOrFail($id);
+        $item = $config['model']::with('media')->findOrFail($id);
+        $updateUrl = url("/{$entity}/update/{$id}");
 
         return Inertia::render($config['view']['form'], [
             'entity' => $entity,
             'item' => $item,
-            'fields' => $config['form']['fields'],
-            'title' => "Edit " . $config['title'],
+            'sections' => $config['form']['sections'] ?? null,
+            'fields' => $config['form']['fields'] ?? null,
+            'title' => $config['title'],
+            'updateUrl' => $updateUrl,
             'auth' => ['user' => auth()->user()],
         ]);
     }
 
-
     public function store(Request $request, $entity)
     {
-
-        $config = Config::get("models.{$entity}");
+        $config = $this->config[$entity] ?? null;
         abort_unless($config && isset($config['form']), 404);
-    
-        $newRecord = new $config['class'];
-        $newRecord->fill($request->all());
-    
-        foreach ($config['form']['fields'] as $field => $properties) {
-            if (($properties['type'] === 'file' || $properties['type'] === 'image') && $request->hasFile($field)) {
-                $newRecord->addMediaFromRequest($field)
-                          ->toMediaCollection(); // Use the field name as the collection name
-            }
-        }
-    
-        $newRecord->save();
-    
-        return redirect()->route('entity.index', ['entity' => $entity])
-            ->with('success', 'New record created successfully.');
-    }
-    
 
+        $newRecord = new $config['model'];
+        $newRecord->fill($request->all());
+
+        if (isset($config['form']['sections'])) {
+            foreach ($config['form']['sections'] as $section) {
+                $this->entityService->handleMediaUploads($newRecord, $request, $section['fields']);
+            }
+        } else {
+            // Fallback to the original handling if sections are not used
+            $this->entityService->handleMediaUploads($newRecord, $request, $config['form']['fields']);
+        }
+
+        $newRecord->save();
+
+        return redirect()->route('entity.show', [$entity, $newRecord->id])
+            ->with('message', 'Data Berhasil Diinput');
+    }
 
     public function update(Request $request, $entity, $id)
     {
-        $config = Config::get("models.{$entity}");
+        $config = $this->config[$entity] ?? null;
         abort_unless($config && isset($config['form']), 404);
-    
-        $record = $config['class']::findOrFail($id);
-        $record->fill($request->except(['file', 'image'])); // Adjust based on your fields
-    
-        foreach ($config['form']['fields'] as $field => $properties) {
-            if (($properties['type'] === 'file' || $properties['type'] === 'image') && $request->hasFile($field)) {
-                $record->clearMediaCollection($field);
-                $record->addMediaFromRequest($field)
-                       ->toMediaCollection($field); // Use the field name as the collection name
+
+        $record = $config['model']::findOrFail($id);
+        $record->fill($request->except(['file', 'image']));
+
+        if (isset($config['form']['sections'])) {
+            foreach ($config['form']['sections'] as $section) {
+                $this->entityService->handleMediaUploads($record, $request, $section['fields']);
             }
+        } else {
+            // Fallback to the original handling if sections are not used
+            $this->entityService->handleMediaUploads($record, $request, $config['form']['fields']);
         }
-    
+
         $record->save();
-    
-        return redirect()->route('entity.index', ['entity' => $entity])
-            ->with('success', 'Record updated successfully.');
+
+        return redirect()->route('entity.show', [$entity, $id])
+            ->with('message', 'Data Berhasil Diinput');
     }
 
     public function destroy($entity, $id)
     {
-        $config = Config::get("models.{$entity}");
+        $config = $this->config[$entity] ?? null;
         abort_unless($config, 404);
 
-        $config['class']::findOrFail($id)->delete();
+        $config['model']::findOrFail($id)->delete();
 
         return redirect()->back()->with('success', 'Item deleted successfully.');
     }
-
-
-
 }

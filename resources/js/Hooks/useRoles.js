@@ -11,5 +11,9 @@ export function useRoles() {
         return auth.user && Array.isArray(auth.user.roles) && auth.user.roles.some(role => role.name === 'guest');
     };
 
-    return { isAdmin, isGuest };
+    const isUser = () => {
+        return auth.user && Array.isArray(auth.user.roles) && auth.user.roles.some(role => role.name === 'user');
+    };
+
+    return { isAdmin, isGuest, isUser };
 }

@@ -11,9 +11,9 @@ class Option extends Model
 
     public $timestamps = false;
     protected $fillable = [
-        'type',
         'key',
         'value',
+        'label',
         'description'
     ];
 

@@ -1,7 +1,5 @@
 <?php
 
-$commonFields = include(base_path('config/components/common_fields.php'));
+$commonFields = include(base_path('config/common_fields.php'));
 
-return [
 
-];

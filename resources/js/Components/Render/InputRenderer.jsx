@@ -1,117 +1,79 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const InputRenderer = ({ name, fieldConfig, value, onChange }) => {
-    const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const torId = urlParams.get('tor_id');
-    console.log("torId value: ", torId);
-
-
+const InputRenderer = ({ name, fieldConfig, value, onChange, item }) => {
+    const [filePreview, setFilePreview] = useState(null);
 
     const inputClasses =
         "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6";
 
-    const renderSmallLabel = () => (
-        <small className="block text-gray-600">
-            {fieldConfig.smallLabel}
-            {fieldConfig.url && (
-                <a
-                    href={fieldConfig.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800"
-                >
-                    {fieldConfig.urlLabel || "Click for Reference"}
-                </a>
-            )}
-        </small>
-    );
+    useEffect(() => {
+        if (item) {
+            const fileItem = item.media?.find(
+                (media) => media.collection_name === name
+            );
+
+            if (fileItem) {
+                const fileUrl = `/media/${fileItem.id}/${fileItem.file_name}`;
+                setFilePreview(fileUrl);
+            } else {
+                setFilePreview(null);
+            }
+        } else {
+            // In create mode, when no 'item' is provided, hide the file preview
+            setFilePreview(null);
+        }
+    }, [item, name]);
+
+    const inputValue = value === null || value === undefined ? "" : value;
+
+    const renderFilePreview = () => {
+        if (filePreview) {
+            if (
+                (fieldConfig.type === "file" || fieldConfig.type === "image") &&
+                filePreview
+            ) {
+                return (
+                    <a
+                        href={filePreview}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="link"
+                    >
+                        {filePreview.split("/").pop()} {/* Display file name */}
+                    </a>
+                );
+            }
+        }
+        return null;
+    };
 
     const handleFileChange = (e) => {
-        if (
-            (fieldConfig.type === "file" || fieldConfig.type === "image") &&
-            e.target.files
-        ) {
-            onChange(e); // Ensure this is correctly passing the event
+        if (e.target.files) {
+            onChange(e);
 
-            // Read the file using FileReader
-            const reader = new FileReader();
-            const file = e.target.files[0];
+            if (fieldConfig.type === "image") {
+                const reader = new FileReader();
+                const file = e.target.files[0];
 
-            reader.onloadend = () => {
-                setImagePreviewUrl(reader.result);
-            };
+                reader.onloadend = () => {
+                    if (reader.readyState === 2) {
+                        // Use reader.result to set the image preview URL
+                        setFilePreview(reader.result);
+                    }
+                };
 
-            if (file) {
-                reader.readAsDataURL(file);
+                reader.onerror = () => {
+                    console.error("Error reading file");
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
             }
         }
     };
 
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
-    };
-
     const renderInput = () => {
-        const placeholderText = `Input ${fieldConfig.label}`;
-
-        const label = (
-            <label
-                htmlFor={name}
-                className="py-2 block text-sm font-medium leading-6 text-gray-900"
-            >
-                {fieldConfig.label}
-            </label>
-        );
-
-        if (name === "start_date") {
-            return (
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <div className="flex flex-col w-full sm:w-1/2">
-                        <label htmlFor="start_date" className="py-2 block text-sm font-medium leading-6 text-gray-900">
-                            Start Date
-                        </label>
-                        <input
-                            id="start_date"
-                            type="date"
-                            name="start_date"
-                            onChange={onChange}
-                            className={inputClasses}
-                            aria-label="start_date"
-                            placeholder="Start Date"
-                        />
-                    </div>
-        
-                    <div className="flex flex-col w-full sm:w-1/2">
-                        <label htmlFor="end_date" className="py-2 block text-sm font-medium leading-6 text-gray-900">
-                            End Date
-                        </label>
-                        <input
-                            id="end_date"
-                            type="date"
-                            name="end_date"
-                            onChange={onChange}
-                            className={inputClasses}
-                            aria-label="end_date"
-                            placeholder="End Date"
-                        />
-                    </div>
-                </div>
-            );
-        }
-        
-        
-        
-
-        // Skip rendering of end_date field if start_date is already rendered
-        if (name === "end_date") {
-            return null;
-        }
-
         switch (fieldConfig.type) {
             case "text":
             case "number":
@@ -119,54 +81,114 @@ const InputRenderer = ({ name, fieldConfig, value, onChange }) => {
             case "password":
             case "date":
                 return (
-                    <div>
-                        {label}
+                    <>
+                        <label
+                            htmlFor={name}
+                            className="py-2 block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            {fieldConfig.label}
+                        </label>
                         <input
                             id={name}
                             type={fieldConfig.type}
                             name={name}
-                            value={value}
+                            value={inputValue}
                             onChange={onChange}
                             className={inputClasses}
                             aria-label={name}
-                            placeholder={placeholderText}
+                            placeholder={`Isi ${fieldConfig.label}`}
                         />
-                    </div>
+                    </>
+                );
+            case "hidden":
+                return (
+                    <input id={name} type="hidden" name={name} value={value} />
+                );
+            case "file":
+                return (
+                    <>
+                        <label
+                            htmlFor={name}
+                            className="py-2 block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            {fieldConfig.label}
+                        </label>
+                        <input
+                            id={name}
+                            type="file"
+                            name={name}
+                            onChange={handleFileChange}
+                            className={inputClasses}
+                            aria-label={name}
+                            accept="file/*"
+                        />
+                    </>
+                );
+            case "image":
+                return (
+                    <>
+                        <label
+                            htmlFor={name}
+                            className="py-2 block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            {fieldConfig.label}
+                        </label>
+                        <input
+                            id={name}
+                            type="file"
+                            name={name}
+                            onChange={handleFileChange}
+                            className={inputClasses}
+                            aria-label={name}
+                            accept="image/*"
+                        />
+                    </>
                 );
             case "textarea":
                 return (
-                    <div>
-                        {label}
+                    <>
+                        <label
+                            htmlFor={name}
+                            className="py-2 block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            {fieldConfig.label}
+                        </label>
                         <textarea
                             id={name}
                             name={name}
-                            value={value}
                             onChange={onChange}
                             className={inputClasses}
+                            value={inputValue}
                             aria-label={name}
-                            placeholder={placeholderText}
+                            placeholder={`Isi ${fieldConfig.label}`}
                         />
-                    </div>
+                    </>
                 );
             case "select":
+                const hasOptions = Array.isArray(fieldConfig.options);
                 return (
-                    <div>
-                        {label}
+                    <>
+                        <label
+                            htmlFor={name}
+                            className="py-2 block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            {fieldConfig.label}
+                        </label>
                         <select
                             id={name}
                             name={name}
-                            value={value || ""}
+                            value={inputValue || ""}
                             onChange={onChange}
                             className={inputClasses}
                             aria-label={name}
                         >
                             {value === "" && (
-                                <option value="" disabled>
-                                    {placeholderText}
-                                </option>
+                                <option
+                                    value=""
+                                    disabled
+                                >{`Pilih ${fieldConfig.label}`}</option>
                             )}
-                            {fieldConfig.options &&
-                            Array.isArray(fieldConfig.options) ? (
+                            {hasOptions ? (
                                 fieldConfig.options.map((option, index) => (
                                     <option key={index} value={option.value}>
                                         {option.label}
@@ -176,99 +198,61 @@ const InputRenderer = ({ name, fieldConfig, value, onChange }) => {
                                 <option disabled>No options available</option>
                             )}
                         </select>
-                    </div>
+                    </>
                 );
-            case "file":
-            case "image":
+            case "combobox":
                 return (
-                    <div>
-                        {label}
-                        <input
+                    <>
+                        <label
+                            htmlFor={name}
+                            className="py-2 block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            {fieldConfig.label}
+                        </label>
+                        <select
                             id={name}
-                            type="file"
                             name={name}
-                            onChange={handleFileChange}
+                            multiple
+                            value={value || []}
+                            onChange={onChange}
                             className={inputClasses}
                             aria-label={name}
-                            accept={
-                                fieldConfig.type === "image"
-                                    ? "image/*"
-                                    : undefined
-                            }
-                        />
-                        {fieldConfig.type === "image" && imagePreviewUrl && (
-                            <img
-                                src={imagePreviewUrl}
-                                alt={`Preview of ${name}`}
-                                className="mt-2 cursor-pointer"
-                                style={{
-                                    maxWidth: "100px",
-                                    maxHeight: "100px",
-                                }}
-                                onClick={toggleModal}
-                            />
-                        )}
-
-                        {isModalOpen && (
-                            <div
-                                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-                                onClick={toggleModal}
-                            >
-                                <div className="bg-white p-4 rounded-lg">
-                                    <img
-                                        src={imagePreviewUrl}
-                                        alt={`Preview of ${name}`}
-                                    />
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                        >
+                            {fieldConfig.options.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </>
                 );
-                case 'readonly':
-                    return (
-                        
-                        <div>
-                            {label}
-<input
-    type="text"
-    name="tor_id"
-    value={torId}
-    readOnly
-    className={inputClasses}
-/>
-
-                        </div>
-                    );
-                
             default:
                 return null;
         }
     };
 
     return (
+        
         <div>
             {renderInput()}
-            {(fieldConfig.smallLabel || fieldConfig.url) && renderSmallLabel()}
+            {renderFilePreview()}
+            {(fieldConfig.smallLabel || fieldConfig.url) && (
+                <small className="block text-gray-600">
+                    {fieldConfig.smallLabel}
+                    {fieldConfig.url && (
+                        <a
+                            href={fieldConfig.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800"
+                        >
+                            {fieldConfig.urlLabel || "Click for Reference"}
+                        </a>
+                    )}
+                </small>
+            )}
         </div>
     );
-};
-
-InputRenderer.propTypes = {
-    name: PropTypes.string.isRequired,
-    fieldConfig: PropTypes.shape({
-        type: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-        placeholder: PropTypes.string,
-        smallLabel: PropTypes.string,
-        url: PropTypes.string,
-        urlLabel: PropTypes.string,
-    }).isRequired,
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.object,
-    ]), // Object for file/image
-    onChange: PropTypes.func.isRequired,
 };
 
 export default InputRenderer;

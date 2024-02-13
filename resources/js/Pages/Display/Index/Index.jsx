@@ -1,25 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import HeaderTitle from "@/Components/Header/HeaderTitle";
-import MapComponent from "@/Components/Content/MapComponent";
-import EntityGrid from "@/Components/Content/EntityGrid";
-import EntityTable from "@/Components/Content/EntityTable";
+import Tables from "@/Components/Content/Tables";
+import Grids from "@/Components/Content/Grids";
+import IndexLayout from "@/Components/Layout/IndexLayout";
 
-const Index = ({ items, fields, auth, title, entity }) => {
-
-    const hasCoordinates = fields.x_coordinate && fields.y_coordinate;
-
+const Index = ({ items, auth, title, entity, tables = null, grids = null, createUrl, exportUrl }) => {
+    const [filter, setFilter] = useState("");
+    const filteredItems = items.filter(
+        (item) =>
+            !filter ||
+            Object.values(item).some((value) =>
+                String(value).toLowerCase().includes(filter.toLowerCase())
+            )
+    );
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title={title} />
-            <div className="sticky top-0 z-10 ">
-            <HeaderTitle title={title} entity={entity} />
-            </div>
-            {hasCoordinates && (
-                <MapComponent items={items} fields={fields}/>
-            )}
-            <EntityTable items={items} fields={fields} entity={entity} />
+            <HeaderTitle
+                title={title}
+                breadcrumbs={[
+                    { name: "Home", url: "/dashboard" },
+                    { name: title },
+                ]}
+            />
+            <IndexLayout
+                entity={entity}
+                setFilter={setFilter}
+                createUrl={createUrl}
+                exportUrl={exportUrl}
+            >
+                {tables && (
+                    <Tables
+                        items={filteredItems}
+                        fields={tables.fields}
+                        entity={entity}
+                    />
+                )}
+                {grids && (
+                    <Grids
+                        items={filteredItems}
+                        fields={grids.fields}
+                        entity={entity}
+                    />
+                )}
+            </IndexLayout>
         </AuthenticatedLayout>
     );
 };

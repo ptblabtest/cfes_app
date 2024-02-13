@@ -4,35 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Tor extends Model
+class Tor extends Model implements HasMedia
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, SoftDeletes, LogsActivity, InteractsWithMedia;
 
     protected $fillable = [
-        'title','project_type','start_date', 'end_date', 'location_id', 'background',
-        'purpose', 'output', 'result', 'activity', 'budget'
+        'project_id', 'start_date', 'end_date', 'budget', 'created_by', 'approval_status'
     ];
 
     public function createdby()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-    public function projecttype()
-    {
-        return $this->belongsTo(Option::class, 'project_type');
-    }
 
-    public function location()
+    public function project()
     {
-        return $this->belongsTo(Location::class, 'location_id');
-    }
-
-    public function btor()
-    {
-        return $this->hasOne(Btor::class);
+        return $this->belongsTo(Project::class);
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -40,27 +33,8 @@ class Tor extends Model
         return LogOptions::defaults();
     }
 
-    // Log all changes
     protected static $logFillable = true;
-
-    // Only the changed attributes will be saved in the log
     protected static $logOnlyDirty = true;
+    protected static $logName = 'TOR';
 
-    // Optionally give a name to the log
-    protected static $logName = 'tor';
-
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($tor) {
-            if (auth()->check()) {
-                $tor->created_by = auth()->id();
-            }
-            $tor->project_status = 'Draft';
-        });
-
-
-    }
 }

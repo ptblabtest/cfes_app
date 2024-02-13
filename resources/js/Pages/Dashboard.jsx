@@ -3,7 +3,17 @@ import { Head } from "@inertiajs/react";
 import { useRoles } from "@/Hooks/useRoles";
 
 export default function Dashboard({ auth }) {
-    const { isAdmin } = useRoles();
+    const { isAdmin, isUser, isGuest } = useRoles();
+    
+    // Determine the role dynamically for display
+    let roleDisplay = "a user";
+    if (isAdmin()) {
+        roleDisplay = "an admin";
+    } else if (isUser()) {
+        roleDisplay = "a user";
+    } else if (isGuest()) {
+        roleDisplay = "a guest";
+    }
 
     return (
         <AuthenticatedLayout
@@ -16,17 +26,15 @@ export default function Dashboard({ auth }) {
         >
             <Head title="Dashboard" />
 
-            {isAdmin() && (
-                <div className="py-1">
-                    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                            <div className="p-6 text-gray-900 dark:text-gray-100">
-                                You're logged in as an admin!
-                            </div>
+            <div className="py-1">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="p-6 text-gray-900 dark:text-gray-100">
+                            You're logged in as {roleDisplay}!
                         </div>
                     </div>
                 </div>
-            )}
+            </div>
         </AuthenticatedLayout>
     );
 }
