@@ -51,8 +51,9 @@ const sidebarConfig = [
         icon: "done",
         items: [
             { name: "Project", route: "/p/projects" },
-            { name: "Kelengkapan Dokumen ISO Tahun 1", route: "/p/docs" },
-            { name: "Kelengkapan Dokumen ISO Tahun 2", route: "/p/ndocs" },
+            { name: "Kelengkapan Dokumen ISO - Persiapan", route: "/p/docs" },
+            { name: "Kelengkapan Dokumen ISO - Operasional", route: "/p/ndocs" },
+            { name: "Kelengkapan Dokumen ISO - Penutupan", route: "/p/closedocs" },
             { name: "TOR/BTOR", route: "/p/plans" },
             { name: "Import Data Smart", route: "/import" },
         ],

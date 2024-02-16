@@ -15,7 +15,7 @@ class Plan extends Model implements HasMedia
     use HasFactory, SoftDeletes, LogsActivity, InteractsWithMedia;
 
     protected $fillable = [
-        'year', 'title', 'project_target', 'project_type', 'location_id', 'created_by'
+        'year', 'title', 'project_target', 'project_type', 'project_id', 'address', 'created_by'
     ];
 
     public function createdby()
@@ -26,6 +26,11 @@ class Plan extends Model implements HasMedia
     public function location()
     {
         return $this->belongsTo(Location::class, 'location_id');
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     public function tor()

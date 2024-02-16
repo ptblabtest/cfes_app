@@ -2,7 +2,7 @@
 
 return [
     'model' => App\Models\Doc::class,
-    'title' => 'Kelengkapan Dokumen ISO Thn 1',
+    'title' => 'Kelengkapan Dokumen ISO - Persiapan',
     'relationship' => ['project'],
     'view' => [
         'index' => 'Display/Index/Index',
@@ -28,51 +28,26 @@ return [
                 ],
             ],
             [
-                'titleform' => 'Penyusunan Informasi & Analisis',
-                'subtitleform' => "8.1: Perencanaan Operasional & Pengendalian\n8.2: Penetapan & Tinjauan Persyaratan (NDA)\n8.3: Desain dan Pengembangan Jasa",
+                'titleform' => '8.1: Perencanaan Operasional & Pengendalian',
+                'fields' => [
+                    'luca' => ['label' => 'LUCA', 'type' => 'file'],
+                ],
+            ],
+            [
+                'titleform' => '8.2 Penetapan & Tinjauan Persyaratan',
                 'fields' => [
                     'nda_1' => ['label' => 'NDA', 'type' => 'file'],
-                    'analysis_1' => ['label' => 'Analisis: persetujuan pelanggan', 'type' => 'file'],
                     'invoice_1' => ['label' => 'Invoice 1', 'type' => 'file'],
                 ],
             ],
             [
-                'titleform' => 'Penyusunsan Konsep Rancangan Jasa Lingkungan',
-                'subtitleform' => "8.3: Desain dan Pengembangan Jasa\n8.4: Pengendalian Penyedia Eksternal",
+                'titleform' => '8.3: Desain dan Pengembangan Jasa',
                 'fields' => [
                     'concept_note' => ['label' => 'Concept Note: persetujuan otoritas', 'type' => 'file'],
+                    'coop_1' => ['label' => 'Surat Perjanjian Kerjasama (SPK)', 'type' => 'file'],
                     'invoice_2' => ['label' => 'Invoice 2', 'type' => 'file'],
-                ],
-            ],
-            [
-                'titleform' => 'Pengembangan Rencana Penyediaan Jasa Lingkungan',
-                'subtitleform' => "8.3: Desain dan Pengembangan Jasa\n8.4: Pengendalian Penyedia Eksternal",
-                'fields' => [
-                    'plan_note' => ['label' => 'Rencana Jasling', 'type' => 'file'],
-                ],
-            ],
-            [
-                'titleform' => 'Pendampingan Rencana Kelola Jasa Lingkungan Partisipatif',
-                'subtitleform' => "8.3: Desain dan Penembangan\n8.4: Pengendalian Penvedia Eksternal\n8.5: Penyediaan Jasa",
-                'fields' => [
-                    'support_note' => ['label' => 'Rencana Kelola Jasa Lingkungan', 'type' => 'file'],
-                    'invoice_3' => ['label' => 'Invoice 3', 'type' => 'file'],
-                ],
-            ],
-            [
-                'titleform' => 'Pendampingan LPHD dalam Pengelolaan Jasa Lingkungan',
-                'subtitleform' => "8.4: Pengendalian Penyedia Eksternal\n8.5: Penvediaan Jasa",
-                'fields' => [
-                    'first_note' => ['label' => 'Laporan Imbalan Tahun 1', 'type' => 'file'],
-                    'invoice_4' => ['label' => 'Invoice 4', 'type' => 'file'],
-                ],
-            ],
-            [
-                'titleform' => 'Penyampaian Laporan Tahun 1 Imbalan Jasa Lingkungan.',
-                'subtitleform' => "8.6: Penverahan Jasa\n8.7: Pengendalian Ketidaksesuaian",
-                'fields' => [
-                    'feedback_client' => ['label' => 'Feedback Client', 'type' => 'file'],
-                    'invoice_5' => ['label' => 'Invoice 5', 'type' => 'file'],
+                    'comp_plan' => ['label' => 'Compensation Plan', 'type' => 'file'],
+                    'fpic' => ['label' => 'FPIC', 'type' => 'file'],
                 ],
             ],
         ],
@@ -81,14 +56,14 @@ return [
         'cards' => [
             'fields' => [
                 'project_id' => $commonFields['project_id'],
-                'nda' => ['label' => 'NDA', 'type' => 'file'],
-                'analysis' => ['label' => 'Analysis', 'type' => 'file'],
-                'invoice' => ['label' => 'Invoice', 'type' => 'file'],
-                'concept_note' => ['label' => 'Concept Note', 'type' => 'file'],
-                'plan_note' => ['label' => 'Rencana Jasling', 'type' => 'file'],
-                'support_note' => ['label' => 'Rencana Kelola Jasa Lingkungan', 'type' => 'file'],
-                'first_note' => ['label' => 'Laporan Imbalan Tahun 1', 'type' => 'file'],
-                'feedback_client' => ['label' => 'Feedback Client', 'type' => 'file'],
+                'luca' => ['label' => 'LUCA', 'type' => 'file'],
+                'nda_1' => ['label' => 'NDA', 'type' => 'file'],
+                'invoice_1' => ['label' => 'Invoice 1', 'type' => 'file'],
+                'concept_note' => ['label' => 'Concept Note: persetujuan otoritas', 'type' => 'file'],
+                'coop_1' => ['label' => 'Surat Perjanjian Kerjasama (SPK)', 'type' => 'file'],
+                'invoice_2' => ['label' => 'Invoice 2', 'type' => 'file'],
+                'comp_plan' => ['label' => 'Compensation Plan', 'type' => 'file'],
+                'fpic' => ['label' => 'FPIC', 'type' => 'file'],
             ],
         ],
     ],

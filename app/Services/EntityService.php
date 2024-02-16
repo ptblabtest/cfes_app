@@ -79,7 +79,7 @@ class EntityService
                 }
 
                 foreach ($relatedItems as $relatedItem) {
-                    if (isset($relatedItem->project_id)) {
+                    if (isset($relatedItem->plan_id)) {
                         $data['isCreatable'] = false;
                         break;
                     }

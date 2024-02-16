@@ -3,7 +3,7 @@
 return [
     'model' => App\Models\Plan::class,
     'title' => 'TOR/BTOR',
-    'relationship' => ['createdby', 'location', 'tor', 'btor', 'plan', 'article', 'project'],
+    'relationship' => ['createdby', 'location', 'tor', 'btor', 'article', 'project'],
     'view' => [
         'index' => 'Display/Index/Index',
         'form' => 'Display/Form/Form',
@@ -65,7 +65,7 @@ return [
             'relationship' => ['createdby', 'plan'],
             'title' => 'Data TOR',
             'create' => [
-                'url' => '/p/tor/create?project_id=',
+                'url' => '/p/tor/create?plan_id=',
                 'label' => 'Isi Tor',
             ],
             'fields' => [
@@ -83,7 +83,7 @@ return [
             'relationship' => ['createdby', 'plan'],
             'title' => 'Data BTOR',
             'create' => [
-                'url' => '/p/btor/create?project_id=',
+                'url' => '/p/btor/create?plan_id=',
                 'label' => 'Isi Btor',
             ],
             'fields' => [
@@ -101,7 +101,7 @@ return [
             'relationship' => ['createdby', 'plan'],
             'title' => 'Data Laporan Aktifitas',
             'create' => [
-                'url' => '/actreports/create?project_id=',
+                'url' => '/actreports/create?plan_id=',
                 'label' => 'Isi Laporan Kegiatan',
             ],
             'fields' => [
@@ -114,7 +114,7 @@ return [
             'relationship' => ['createdby', 'plan'],
             'title' => 'Data Artikel',
             'create' => [
-                'url' => '/article/create?project_id=',
+                'url' => '/article/create?plan_id=',
                 'label' => 'Isi Artikel',
             ],
             'fields' => [

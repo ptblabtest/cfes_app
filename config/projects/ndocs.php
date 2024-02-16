@@ -2,7 +2,7 @@
 
 return [
     'model' => App\Models\Ndoc::class,
-    'title' => 'Kelengkapan Dokumen ISO Thn >2',
+    'title' => 'Kelengkapan Dokumen ISO - Operasional',
     'relationship' => ['project'],
     'view' => [
         'index' => 'Display/Index/Index',
@@ -29,27 +29,19 @@ return [
                 ],
             ],
             [
-                'titleform' => 'Pendampingan Rencana Kelola Jasa Lingkungan Partisipatif',
-                'subtitleform' => "8.3: Desain dan Penembangan\n8.4: Pengendalian Penvedia Eksternal\n8.5: Penyediaan Jasa",
+                'titleform' => '8.3: Desain dan Pengembangan Jasa',
                 'fields' => [
-                    'support_note' => ['label' => 'Rencana Kelola Jasa Lingkungan', 'type' => 'file'],
                     'invoice_3' => ['label' => 'Invoice 3', 'type' => 'file'],
+                    'coop_2' => ['label' => 'SPK Pendamping', 'type' => 'file'],
                 ],
             ],
             [
-                'titleform' => 'Pendampingan LPHD dalam Pengelolaan Jasa Lingkungan',
-                'subtitleform' => "8.4: Pengendalian Penyedia Eksternal\n8.5: Penvediaan Jasa",
+                'titleform' => '8.4: Pengendalian Penvedia Eksternal',
                 'fields' => [
-                    'first_note' => ['label' => 'Laporan Imbalan Tahunan', 'type' => 'file'],
-                    'invoice_4' => ['label' => 'Invoice 4', 'type' => 'file'],
-                ],
-            ],
-            [
-                'titleform' => 'Penyampaian Laporan Tahun 1 Imbalan Jasa Lingkungan.',
-                'subtitleform' => "8.6: Penverahan Jasa\n8.7: Pengendalian Ketidaksesuaian",
-                'fields' => [
-                    'feedback_client' => ['label' => 'Feedback Client', 'type' => 'file'],
-                    'invoice_5' => ['label' => 'Invoice 5', 'type' => 'file'],
+                    'support_note' => ['label' => 'Rencana Kegiatan Pendamping', 'type' => 'file'],
+                    'yearly_report1' => ['label' => 'Laporan Imbalan Tahunan', 'type' => 'file'],
+                    'yearly_report2' => ['label' => 'Laporan Tahunan', 'type' => 'file'],
+                    'invoice_3' => ['label' => 'Invoice 3', 'type' => 'file'],
                 ],
             ],
         ],
@@ -58,9 +50,13 @@ return [
         'cards' => [
             'fields' => [
                 'project_id' => $commonFields['project_id'],
-                'support_note' => ['label' => 'Rencana Kelola Jasa Lingkungan', 'type' => 'file'],
-                'first_note' => ['label' => 'Laporan Imbalan Tahunan', 'type' => 'file'],
-                'feedback_client' => ['label' => 'Feedback Client', 'type' => 'file'],
+                'year' => ['label' => 'Tahun', 'type' => 'text'],
+                'invoice_3' => ['label' => 'Invoice 3', 'type' => 'file'],
+                'coop_2' => ['label' => 'SPK Pendamping', 'type' => 'file'],
+                'support_note' => ['label' => 'Rencana Kegiatan Pendamping', 'type' => 'file'],
+                'yearly_report1' => ['label' => 'Laporan Imbalan Tahunan', 'type' => 'file'],
+                'yearly_report2' => ['label' => 'Laporan Tahunan', 'type' => 'file'],
+                'invoice_3' => ['label' => 'Invoice 3', 'type' => 'file'],
             ],
         ],
     ],

@@ -31,20 +31,22 @@ return [
         'options' => function () {
             return Project::all()
                 ->map(function ($project) {
-                    $label = $project->title . ' - ' . Location::find($project->location_id)->forest_name;
+                    $label = $project->sales_type 
+                    . ' - ' . Client::find($project->client_id)->name
+                    . ' - ' . Location::find($project->location_id)->forest_name;
                     return ['value' => $project->id, 'label' => $label];
                 })->toArray();
         },
     ],
     'plan_id' => [
-        'label' => 'RKT',
+        'label' => 'Judul TOR/BTOR',
         'type' => 'select',
         'relationship' => 'plan',
-        'relation_item' => 'name',
+        'relation_item' => 'title',
         'options' => function () {
             return Plan::all()
                 ->map(function ($plan) {
-                    return ['value' => $plan->id, 'label' => $plan->name];
+                    return ['value' => $plan->id, 'label' => $plan->title];
                 })->toArray();
         },
     ],

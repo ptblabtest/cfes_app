@@ -4,13 +4,13 @@ return [
     'model' => App\Models\Tor::class,
     'title' => 'Terms of Reference',
     'return' => '/projects',
-    'relationship' => ['createdby', 'project'],
+    'relationship' => ['createdby', 'plan'],
     'view' => [
         'form' => 'Display/Form/Form',
     ],
     'form' => [
         'fields' => [
-            'project_id' => $commonFields['project_id'],
+            'plan_id' => $commonFields['plan_id'],
             'start_date' => $commonFields['start_date'],
             'end_date' => $commonFields['end_date'],
             'tor_file' => $commonFields['tor_file'],
