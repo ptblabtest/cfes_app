@@ -11,10 +11,6 @@ return [
         'type' => 'text',
         'smallLabel' => 'Latitude'
     ],
-    'approval_status' => [
-        'label' => 'Status Project',
-        'type' => 'text',
-    ],
     'marker_number' => [
         'label' => 'Nomor Patok Batas',
         'type' => 'text',
@@ -37,11 +33,6 @@ return [
     ],
     'division' => [
         'label' => 'Divisi',
-        'type' => 'text',
-        'validation' => 'nullable|string',
-    ],
-    'name' => [
-        'label' => 'Nama',
         'type' => 'text',
         'validation' => 'nullable|string',
     ],
@@ -72,6 +63,7 @@ return [
     ],
     'phone' => [
         'label' => 'Telepon',
+        'smallLabel' => 'Isi tanpa awalan 0',
         'type' => 'text'
     ],
     'email' => [
@@ -106,38 +98,35 @@ return [
         'label' => 'Status Aktif Member',
         'type' => 'text',
     ],
-    'cp_name' => [
-        'label' => 'Nama Contact Person',
-        'type' => 'text',
-        'validation' => 'nullable|string',
-    ],
-    'cp_email' => [
-        'label' => 'Email Contact Person',
-        'type' => 'text',
-        'validation' => 'nullable|string',
-    ],
-    'cp_phone' => [
-        'label' => 'Telepon Contact Person',
-        'type' => 'text',
-        'validation' => 'nullable|string',
-    ],
-
     'first_name' => [
         'label' => 'Nama Depan',
         'type' => 'text',
         'validation' => 'nullable|string',
     ],
-
     'last_name' => [
         'label' => 'Nama Belakang',
         'type' => 'text',
         'validation' => 'nullable|string',
     ],
-
     'comment' => [
         'label' => 'Status Terkini',
         'type' => 'text',
         'validation' => 'nullable|string',
     ],
 
+    // cek lagi
+    
+
+    'advance_number' => [
+        'label' => 'Nomor Advance',
+        'type' => 'text',
+    ],
+    'account_number' => [
+        'label' => 'Nomor Akun', 'type' => 'text'
+    ],
+    'notes' => [
+        'label' => 'Catatan',
+        'type' => 'textarea',
+        'validation' => 'nullable|string',
+    ],
 ];

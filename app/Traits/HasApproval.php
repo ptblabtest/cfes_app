@@ -2,23 +2,12 @@
 
 namespace App\Traits;
 
-use App\Models\Approval;
+use App\Models\ApprovalLog;
 
 trait HasApproval
 {
-    protected static function bootHasApproval()
+    public function approvalLogs()
     {
-        static::created(function ($model) {
-            Approval::create([
-                'model_type' => get_class($model),
-                'model_id'   => $model->getKey(),
-                'status'     => 'draft',
-            ]);
-        });
-    }
-    public function approval()
-    {
-        return $this->hasOne(Approval::class, 'model_id')
-            ->where('model_type', self::class);
+        return $this->morphMany(ApprovalLog::class, 'model');
     }
 }

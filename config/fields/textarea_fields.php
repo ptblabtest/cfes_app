@@ -1,8 +1,6 @@
 <?php
 
-
 return [
-    
     'address' => [
         'label' => 'Alamat',
         'type' => 'textarea',
@@ -70,7 +68,9 @@ return [
         'rows' => '10',
         'cols' => '50',
     ],
-
-
-
+    'interest' => [
+        'label' => 'Produk yang diminati',
+        'type' => 'textarea',
+        'smallLabel' => 'Deskripsikan produk atau layanan yang diminati oleh prospek'
+    ],
 ];

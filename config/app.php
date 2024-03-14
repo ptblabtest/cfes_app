@@ -170,7 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Spatie\Activitylog\ActivitylogServiceProvider::class,
-        App\Providers\ModelObserverServiceProvider::class,
+       // App\Providers\ModelObserverServiceProvider::class,
     ])->toArray(),
 
     /*

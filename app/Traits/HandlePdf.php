@@ -9,7 +9,7 @@ trait HandlePdf
 {
     public function generatePdf($entity)
     {
-        $config = Config::get("models.{$entity}");
+        $config = Config::get("pages.{$entity}");
         abort_unless($config, 404);
 
         $items = $config['model']::all();

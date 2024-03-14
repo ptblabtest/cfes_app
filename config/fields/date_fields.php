@@ -16,4 +16,10 @@ return [
         'type' => 'date',
         'validation' => 'nullable|string',
     ],
+    'expected_close_date' => [
+        'label' => 'Tanggal Penutupan yang Diharapkan',
+        'type' => 'date',
+        'smallLabel' => 'Tanggal di mana kesepakatan/project ini diharapkan selesai.',
+        'validation' => 'nullable|string',
+    ],
 ];

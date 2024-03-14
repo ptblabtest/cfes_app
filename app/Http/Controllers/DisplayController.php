@@ -2,21 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Services\EntityService;
+use App\Services\MediaService;
+use App\Services\RelationshipService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Config;
-use Spatie\MediaLibrary\HasMedia;
 
 class DisplayController extends Controller
 {
     protected $entityService;
+    protected $relationshipService;
+    protected $mediaService;
     protected $config;
 
-    public function __construct(EntityService $entityService)
-    {
+    public function __construct(
+        EntityService $entityService,
+        RelationshipService $relationshipService,
+        MediaService $mediaService
+    ) {
         $this->entityService = $entityService;
-        $this->config = Config::get("models");
+        $this->relationshipService = $relationshipService;
+        $this->mediaService = $mediaService;
+        $this->config = Config::get("pages");
     }
 
     public function index($entity)
@@ -26,26 +35,12 @@ class DisplayController extends Controller
 
         $items = $this->entityService->getItems($entity, $config);
 
-        if (in_array(HasMedia::class, class_implements($config['model']))) {
-            $items = $this->entityService->loadMediaForItems($items, $config['model']);
-        }
-
-        $items->transform(function ($item) use ($entity) {
-            $item->showUrl = url("/{$entity}/show/{$item->id}");
-            return $item;
-        });
-
-        $createUrl = url("/{$entity}/create");
-        $exportUrl = url("/{$entity}/export");
-
         return Inertia::render('Display/Index/Index', [
             'items' => $items,
             'entity' => $entity,
             'tables' => $config['index']['tables'] ?? null,
             'grids' => $config['index']['grids'] ?? null,
             'title' => $config['title'],
-            'createUrl' => $createUrl ?? null,
-            'exportUrl' => $exportUrl ?? null,
             'auth' => ['user' => auth()->user()],
         ]);
     }
@@ -55,25 +50,29 @@ class DisplayController extends Controller
         $config = $this->config[$entity] ?? null;
         abort_unless($config, 404);
 
-        $item = $this->entityService->getItem($entity, $id, $config);
+        $item = $this->relationshipService->getItemWithDetails($entity, $id, $config);
 
-        $item = $this->entityService->loadMediaForItem($item, $config['model']);
+        if (!empty($config['redirect_show']['enabled'])) {
+            $parentField = $config['parent'] ?? null;
+            $parentId = $item->{$parentField} ?? null;
+            $redirectPath = $config['redirect_show']['path'] ?? null;
+            $showAction = $config['redirect_show']['show_action'] ?? 'show';
 
-    // Retrieve URLs for all images in the 'image' collection
-    $imageUrls = $item->getMedia('image')->map(function ($media) {
-        return $media->getUrl();
-    })->toArray();
+            if ($parentField && $parentId && $redirectPath) {
+                return redirect("/{$redirectPath}/{$showAction}/{$parentId}");
+            }
+        }
 
-        $editUrl = url("/{$entity}/edit/{$id}");
+        $relationShowData = $this->relationshipService->processRelationShowData($item, $config);
 
         return Inertia::render($config['view']['show'], [
             'entity' => $entity,
             'item' => $item,
             'cards' => $config['show']['cards'],
-            'editUrl' => $editUrl,
-            'imageUrls' => $imageUrls,
+            'relation_show' => $relationShowData,
             'title' => $config['title'],
             'auth' => ['user' => auth()->user()],
+            'model' => $config['model'],
         ]);
     }
 
@@ -82,14 +81,23 @@ class DisplayController extends Controller
         $config = $this->config[$entity] ?? null;
         abort_unless($config && isset($config['form']), 404);
 
-        $storeUrl = url("/{$entity}");
+        $parentId = request()->input($config['parent'] ?? '');
+
+        if ($parentId && $config['redirect_show']['enabled'] ?? false) {
+            $parentEntity = $config['model']::where($config['parent'], $parentId)->first();
+
+            if ($parentEntity) {
+                $redirectPath = $config['redirect_show']['path'] ?? $entity;
+                $showAction = $config['redirect_show']['show_action'] ?? 'show';
+                return redirect("/{$redirectPath}/{$showAction}/{$parentId}");
+            }
+        }
 
         return Inertia::render($config['view']['form'], [
             'entity' => $entity,
             'sections' => $config['form']['sections'] ?? null,
             'fields' => $config['form']['fields'] ?? null,
             'title' => $config['title'],
-            'storeUrl' => $storeUrl,
             'auth' => ['user' => auth()->user()],
         ]);
     }
@@ -99,8 +107,7 @@ class DisplayController extends Controller
         $config = $this->config[$entity] ?? null;
         abort_unless($config && isset($config['form']), 404);
 
-        $item = $config['model']::with('media')->findOrFail($id);
-        $updateUrl = url("/{$entity}/update/{$id}");
+        $item = $config['model']::findOrFail($id);
 
         return Inertia::render($config['view']['form'], [
             'entity' => $entity,
@@ -108,7 +115,6 @@ class DisplayController extends Controller
             'sections' => $config['form']['sections'] ?? null,
             'fields' => $config['form']['fields'] ?? null,
             'title' => $config['title'],
-            'updateUrl' => $updateUrl,
             'auth' => ['user' => auth()->user()],
         ]);
     }
@@ -123,17 +129,26 @@ class DisplayController extends Controller
 
         if (isset($config['form']['sections'])) {
             foreach ($config['form']['sections'] as $section) {
-                $this->entityService->handleMediaUploads($newRecord, $request, $section['fields']);
+                $this->mediaService->handleMediaUploads($newRecord, $request->all(), $section['fields']);
             }
         } else {
-            // Fallback to the original handling if sections are not used
-            $this->entityService->handleMediaUploads($newRecord, $request, $config['form']['fields']);
+            $this->mediaService->handleMediaUploads($newRecord, $request->all(), $config['form']['fields']);
         }
 
         $newRecord->save();
 
-        return redirect()->route('entity.show', [$entity, $newRecord->id])
-            ->with('message', 'Data Berhasil Diinput');
+        $parentField = $config['parent'] ?? null;
+        $parentId = $parentField ? $newRecord->{$parentField} : null;
+
+        if ($parentId) {
+            $redirectPath = $config['redirect_show']['path'] ?? $entity;
+            $showAction = $config['redirect_show']['show_action'] ?? 'show';
+            return redirect("/{$redirectPath}/{$showAction}/" . $parentId)
+                ->with('message', 'Data successfully updated.');
+        } else {
+            return redirect("/{$entity}/show/" . $newRecord->id)
+                ->with('message', 'Data successfully updated.');
+        }
     }
 
     public function update(Request $request, $entity, $id)
@@ -146,17 +161,25 @@ class DisplayController extends Controller
 
         if (isset($config['form']['sections'])) {
             foreach ($config['form']['sections'] as $section) {
-                $this->entityService->handleMediaUploads($record, $request, $section['fields']);
+                $this->mediaService->handleMediaUploads($record, $request->all, $section['fields']);
             }
         } else {
-            // Fallback to the original handling if sections are not used
-            $this->entityService->handleMediaUploads($record, $request, $config['form']['fields']);
+            $this->mediaService->handleMediaUploads($record, $request->all(), $config['form']['fields']);
         }
 
         $record->save();
+        $parentField = $config['parent'] ?? null;
+        $parentId = $parentField ? $record->{$parentField} : null;
 
-        return redirect()->route('entity.show', [$entity, $id])
-            ->with('message', 'Data Berhasil Diinput');
+        if ($parentId) {
+            $redirectPath = $config['redirect_show']['path'] ?? $entity;
+            $showAction = $config['redirect_show']['show_action'] ?? 'show';
+            return redirect("/{$redirectPath}/{$showAction}/" . $parentId)
+                ->with('message', 'Data successfully updated.');
+        } else {
+            return redirect("/{$entity}/show/" . $record->id)
+                ->with('message', 'Data successfully updated.');
+        }
     }
 
     public function destroy($entity, $id)

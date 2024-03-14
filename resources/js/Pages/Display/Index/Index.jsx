@@ -2,11 +2,18 @@ import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import HeaderTitle from "@/Components/Header/HeaderTitle";
-import Tables from "@/Components/Content/Tables";
-import Grids from "@/Components/Content/Grids";
+import Tables from "@/Components/Tables";
+import Grids from "@/Components/Grids";
 import IndexLayout from "@/Components/Layout/IndexLayout";
 
-const Index = ({ items, auth, title, entity, tables = null, grids = null, createUrl, exportUrl }) => {
+const Index = ({
+    items,
+    auth,
+    title,
+    entity,
+    tables = null,
+    grids = null,
+}) => {
     const [filter, setFilter] = useState("");
     const filteredItems = items.filter(
         (item) =>
@@ -15,6 +22,7 @@ const Index = ({ items, auth, title, entity, tables = null, grids = null, create
                 String(value).toLowerCase().includes(filter.toLowerCase())
             )
     );
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title={title} />
@@ -25,11 +33,11 @@ const Index = ({ items, auth, title, entity, tables = null, grids = null, create
                     { name: title },
                 ]}
             />
+                    <div className="max-w-5xl mt-2 mx-auto sm:px-6 lg:px-8">
             <IndexLayout
                 entity={entity}
                 setFilter={setFilter}
-                createUrl={createUrl}
-                exportUrl={exportUrl}
+                createUrl={`/${entity}/create`}
             >
                 {tables && (
                     <Tables
@@ -46,6 +54,8 @@ const Index = ({ items, auth, title, entity, tables = null, grids = null, create
                     />
                 )}
             </IndexLayout>
+            </div>
+            
         </AuthenticatedLayout>
     );
 };

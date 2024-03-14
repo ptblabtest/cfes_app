@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Cards from "../Content/Cards";
+import Cards from "../Card/Cards";
 import Modal from "../Modal";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 

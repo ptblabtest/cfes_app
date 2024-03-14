@@ -16,5 +16,4 @@ class Option extends Model
         'label',
         'description'
     ];
-
 }

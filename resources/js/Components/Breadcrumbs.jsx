@@ -1,15 +1,16 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 
-const HeaderTitle = ({ title, breadcrumbs }) => {
+const Breadcrumbs = ({ title, breadcrumbs }) => {
     return (
         <div>
-            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+            {/* Adjusted title size to be smaller */}
+            <h2 className="text-sm font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">
                 {title}
             </h2>
             {breadcrumbs && breadcrumbs.length > 0 && (
                 <nav aria-label="breadcrumb">
-                    <ol className="flex space-x-4">
+                    <ol className="flex space-x-1 text-sm"> {/* Text size adjusted for breadcrumbs */}
                         {breadcrumbs.map((breadcrumb, index) => (
                             <React.Fragment key={index}>
                                 {breadcrumb.url ? (
@@ -23,7 +24,8 @@ const HeaderTitle = ({ title, breadcrumbs }) => {
                                         {breadcrumb.name}
                                     </li>
                                 )}
-                                {index < breadcrumbs.length - 1 && <li>/</li>}
+                                {/* Separator also has the same smaller text size applied */}
+                                {index < breadcrumbs.length - 1 && <li className="text-sm">|</li>} {/* Text size class added for consistency */}
                             </React.Fragment>
                         ))}
                     </ol>
@@ -33,4 +35,4 @@ const HeaderTitle = ({ title, breadcrumbs }) => {
     );
 };
 
-export default HeaderTitle;
+export default Breadcrumbs;

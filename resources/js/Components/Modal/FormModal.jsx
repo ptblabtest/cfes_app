@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from '../Modal';
-import FormCard from '../Content/FormCard';
+import FormCard from '../Form/FormCard';
 
 
 const FormModal = ({ show, onClose, entity, item, fields, title }) => {

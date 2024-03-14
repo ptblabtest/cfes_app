@@ -1,152 +1,213 @@
 <?php
 
-use App\Models\Animal;
-use App\Models\Client;
-use App\Models\EntList;
-use App\Models\Location;
-use App\Models\Org;
-use App\Models\Plan;
-use App\Models\Plant;
-use App\Models\Project;
-use App\Models\User;
-
 return [
     'location_id' => [
         'label' => 'Lokasi',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'location',
         'relation_item' => 'forest_name',
         'options' => function () {
-            return Location::all()
-                ->map(function ($location) {
-                    return ['value' => $location->id, 'label' => $location->forest_name];
+            return App\Models\Location::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->forest_name];
                 })->toArray();
         },
     ],
     'project_id' => [
         'label' => 'Nama Project',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'project',
         'relation_item' => 'title',
         'options' => function () {
-            return Project::all()
-                ->map(function ($project) {
-                    $label = $project->sales_type 
-                    . ' - ' . Client::find($project->client_id)->name
-                    . ' - ' . Location::find($project->location_id)->forest_name;
-                    return ['value' => $project->id, 'label' => $label];
-                })->toArray();
+            return App\Models\Project::all()
+            ->map(function ($option) {
+                return ['value' => $option->id, 'label' => $option->title];
+            })->toArray();
+        },
+    ],
+    'account_id' => [
+        'label' => 'Nama Akun',
+        'type' => 'related',
+        'relationship' => 'account',
+        'relation_item' => 'name',
+        'options' => function () {
+            return App\Models\Account::all()
+            ->map(function ($option) {
+                return ['value' => $option->id, 'label' => $option->name];
+            })->toArray();
+        },
+    ],
+    'account_item_id' => [
+        'label' => 'Nama Item',
+        'type' => 'related',
+        'relationship' => 'accountitem',
+        'relation_item' => 'name',
+        'options' => function () {
+            return App\Models\AccountItem::all()
+            ->map(function ($option) {
+                return ['value' => $option->id, 'label' => $option->name];
+            })->toArray();
+        },
+    ],
+    'advance_id' => [
+        'label' => 'Nomor Advance',
+        'type' => 'related',
+        'smallLabel' => 'Isi Nomor Advance jika biaya ini dari Advance',
+        'relationship' => 'advance',
+        'relation_item' => 'advance_number',
+        'options' => function () {
+            return App\Models\Advance::all()
+            ->map(function ($option) {
+                return ['value' => $option->id, 'label' => $option->advance_number];
+            })->toArray();
         },
     ],
     'plan_id' => [
         'label' => 'Judul TOR/BTOR',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'plan',
         'relation_item' => 'title',
         'options' => function () {
-            return Plan::all()
-                ->map(function ($plan) {
-                    return ['value' => $plan->id, 'label' => $plan->title];
+            return App\Models\Plan::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->title];
                 })->toArray();
         },
     ],
     'org_id' => [
         'label' => 'Lembaga',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'org',
         'relation_item' => 'name',
         'options' => function () {
-            return Org::all()
-                ->map(function ($org) {
-                    return ['value' => $org->id, 'label' => $org->name];
+            return App\Models\Org::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
                 })->toArray();
         },
     ],
     'plant_id' => [
         'label' => 'Nama Tumbuhan',
         'smallLabel' => 'Pilih Sesuai Nama Tumbuhan',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'plant',
         'relation_item' => 'name',
         'options' => function () {
-            return Plant::all()
-                ->map(function ($plant) {
-                    return ['value' => $plant->id, 'label' => $plant->name];
+            return App\Models\Plant::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
                 })->toArray();
         },
     ],
     'animal_id' => [
         'label' => 'Nama Satwa',
         'smallLabel' => 'Pilih Sesuai Nama Satwa',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'animal',
         'relation_item' => 'name',
         'options' => function () {
-            return Animal::all()
-                ->map(function ($animal) {
-                    return ['value' => $animal->id, 'label' => $animal->name];
+            return App\Models\Animal::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
                 })->toArray();
         },
     ],
     'ent_id' => [
         'label' => 'Kelompok Usaha',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'entlist',
         'relation_item' => 'name',
         'options' => function () {
-            return EntList::all()
-                ->map(function ($entlist) {
-                    return ['value' => $entlist->id, 'label' => $entlist->name];
+            return App\Models\EntList::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
                 })->toArray();
         },
     ],
-    'client_id' => [
-        'label' => 'Client',
-        'type' => 'select',
-        'relationship' => 'client',
+    'customer_id' => [
+        'label' => 'Customer',
+        'type' => 'related',
+        'relationship' => 'customer',
         'relation_item' => 'name',
         'options' => function () {
-            return Client::all()
-                ->map(function ($client) {
-                    return ['value' => $client->id, 'label' => $client->name];
+            return App\Models\Customer::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
                 })->toArray();
         },
     ],
     'created_by' => [
         'label' => 'Dibuat Oleh',
-        'type' => 'select',
-        'relationship' => 'createdby',
+        'type' => 'related',
+        'relationship' => 'creator',
         'relation_item' => 'name',
         'options' => function () {
-            return User::all()
-                ->map(function ($user) {
-                    return ['value' => $user->id, 'label' => $user->name];
+            return App\Models\User::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
+                })->toArray();
+        },
+    ],
+    'lead_id' => [
+        'label' => 'Prospek',
+        'type' => 'related',
+        'relationship' => 'lead',
+        'relation_item' => 'name',
+        'options' => function () {
+            return App\Models\Lead::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
+                })->toArray();
+        },
+    ],
+    'deal_id' => [
+        'label' => 'Peluang Bisnis',
+        'type' => 'related',
+        'relationship' => 'deals',
+        'relation_item' => 'combined_id',
+        'options' => function () {
+            $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
+            return App\Models\Deal::all()
+                ->map(function ($option) use ($formatter) {
+                    $customer_name = optional($option->customer)->name; 
+                    $formattedRevenue = $formatter->formatCurrency($option->potential_revenue, 'IDR');
+                    $label = $customer_name . ' - ' . $formattedRevenue;
+                    return [
+                        'value' => $option->id, 
+                        'label' => $label
+                    ];
                 })->toArray();
         },
     ],
     'pmanager' => [
         'label' => 'Project Manager',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'pmanager',
         'relation_item' => 'name',
         'options' => function () {
-            return User::all()
-                ->map(function ($user) {
-                    return ['value' => $user->id, 'label' => $user->name];
+            return App\Models\User::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
                 })->toArray();
         },
     ],
     'approver' => [
         'label' => 'Approver',
-        'type' => 'select',
+        'type' => 'related',
         'relationship' => 'approver',
         'relation_item' => 'name',
         'options' => function () {
-            return User::all()
-                ->map(function ($user) {
-                    return ['value' => $user->id, 'label' => $user->name];
+            return App\Models\User::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
                 })->toArray();
         },
+    ],
+    'model_id' => [
+        'label' => 'Model ID',
+        'type' => 'text',
+        'background' => 'bg-gray-200',
+        'smallLabel' => 'Otomatis terisi, tidak perlu diisi lagi'
     ],
 
 

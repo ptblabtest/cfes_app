@@ -1,4 +1,4 @@
-import Tables from "@/Components/Content/Tables";
+import Tables from "@/Components/Tables";
 import { Head } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import React from "react";

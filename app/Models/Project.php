@@ -2,62 +2,45 @@
 
 namespace App\Models;
 
-use App\Notifications\ProjectSubmitted;
+use App\Traits\HasCreator;
+use App\Traits\HasDocument;
+use App\Traits\HasFinancials;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Project extends Model implements HasMedia
+
+class Project extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity, InteractsWithMedia;
+    use HasFactory;
+    use LogsActivity;
+    use HasCreator, HasFinancials, HasDocument;
 
     protected $fillable = [
-        'title', 'client_id', 'location_id', 'sales_type', 'amount', 'approval_status', 'pmanager', 'approver', 'start_date', 'end_date', 'created_by'
+        'title', 'parent_id', 'deal_id', 'amount', 'start_date', 'expected_close_date', 'status', 'created_by'
     ];
 
-    public function createdby()
+    public function deals()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(Deal::class, 'deal_id');
     }
 
-    public function location()
+    public function projectActivities()
     {
-        return $this->belongsTo(Location::class, 'location_id');
+        return $this->hasMany(ProjectActivity::class, 'project_id');
     }
-
-    public function docs()
-    {
-        return $this->hasMany(Doc::class, 'project_id');
-    }
-
-    public function client()
-    {
-        return $this->belongsTo(Client::class, 'client_id');
-    }
-
-    public function pmanager()
-    {
-        return $this->belongsTo(User::class, 'pmanager');
-    }
-
-    public function approver()
-    {
-        return $this->belongsTo(User::class, 'approver');
-    }
-
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
-    protected static $logName = 'Project';
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults();
+        $logName = config('pages.projects.title', 'default');
+
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->useLogName($logName)
+            ->logFillable();
     }
-
-
 }

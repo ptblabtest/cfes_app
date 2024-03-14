@@ -2,10 +2,10 @@ import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
 import HeaderTitle from "@/Components/Header/HeaderTitle";
-import FormCard from "@/Components/Content/FormCard";
-import SectionFormCard from "@/Components/Content/SectionFormCard"; // Ensure this is imported
+import FormCard from "@/Components/Form/FormCard";
+import SectionFormCard from "@/Components/Form/SectionFormCard";
 
-const Form = ({ entity, item, fields, sections, title, storeUrl, updateUrl }) => {
+const Form = ({ entity, item, fields, sections, title }) => {
     const { auth } = usePage().props;
 
     return (
@@ -19,26 +19,29 @@ const Form = ({ entity, item, fields, sections, title, storeUrl, updateUrl }) =>
                     { name: item ? `Edit ${title}` : `Tambah ${title}` },
                 ]}
             />
-            {/* Directly conditionally render within the JSX */}
-            {fields ? (
-                <FormCard
-                    item={item}
-                    entity={entity}
-                    fields={fields}
-                    title={title}
-                    storeUrl={storeUrl} 
-                    updateUrl={updateUrl}
-                />
-            ) : (
-                <SectionFormCard
-                    item={item}
-                    entity={entity}
-                    sections={sections}
-                    title={title}
-                    storeUrl={storeUrl} 
-                    updateUrl={updateUrl}
-                />
-            )}
+            <div className="mx-auto py-2">
+                <div className="max-w-5xl mx-auto sm:px-6 lg:px-8">
+                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="px-4 py-5">
+                            {fields ? (
+                                <FormCard
+                                    item={item}
+                                    entity={entity}
+                                    fields={fields}
+                                    title={title}
+                                />
+                            ) : (
+                                <SectionFormCard
+                                    item={item}
+                                    entity={entity}
+                                    sections={sections}
+                                    title={title}
+                                />
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </AuthenticatedLayout>
     );
 };

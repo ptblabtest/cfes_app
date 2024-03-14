@@ -5,22 +5,39 @@ import {
     Bars3Icon,
     ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import sidebarConfig from "@/Config/sidebarConfig";
 import { usePage } from "@inertiajs/react";
 
 function Sidebar() {
     const [open, setOpen] = useState(false);
     const { url } = usePage();
 
+    const [sidebarConfig, setSidebarConfig] = useState([]);
     const [activeCategory, setActiveCategory] = useState(null);
 
-    // Determine which category should be open based on the current URL
     useEffect(() => {
-        const currentCategory = sidebarConfig.find(category =>
-            category.items.some(item => url === item.route)
+        // Fetch the sidebar configuration from the backend on component mount
+        const fetchSidebarConfig = async () => {
+            try {
+                const response = await fetch("/api/sidebar"); // Update '/api/sidebar' with your actual API endpoint
+                const config = await response.json();
+                setSidebarConfig(config);
+            } catch (error) {
+                console.error("Failed to fetch sidebar config:", error);
+            }
+        };
+
+        fetchSidebarConfig();
+    }, []); // This effect runs once on mount
+
+    useEffect(() => {
+        // Update active category based on URL and fetched sidebarConfig
+        const basePath = url.split("/")[1];
+        const currentCategory = sidebarConfig.find((category) =>
+            category.children.some((item) => item.route.split("/")[1] === basePath)
         );
+
         setActiveCategory(currentCategory ? currentCategory.title : null);
-    }, [url]);
+    }, [url, sidebarConfig]); // This effect runs on url or sidebarConfig change
 
     return (
         <div className="bg-teal-50">
@@ -51,29 +68,57 @@ function Sidebar() {
                                 </button>
                             </div>
                             <div className="flex-grow overflow-y-auto px-4 py-6">
-                {sidebarConfig.map((category) => (
-                    <details key={category.title} className="mb-3" open={activeCategory === category.title}>
-                        <summary className="flex justify-between items-center text-lg font-medium cursor-pointer">
-                            {category.title}
-                            <ChevronDownIcon className="h-5 w-5" />
-                        </summary>
-                        <ul className="mt-2 space-y-1 pl-4">
-                            {category.items.map((item) => (
-                                <li key={item.name}>
-                                    <a
-                                        href={item.route}
-                                        className={`block p-2 text-base hover:bg-gray-50 ${
-                                            url === item.route ? "font-bold" : "text-gray-900"
-                                        }`}
+                                {sidebarConfig.map((category) => (
+                                    <details
+                                        key={category.title}
+                                        className="mb-3"
+                                        open={activeCategory === category.title}
                                     >
-                                        {item.name}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </details>
-                ))}
-            </div>
+                                        <summary className="flex justify-between items-center text-lg font-medium cursor-pointer">
+                                            {category.title}
+                                            <ChevronDownIcon className="h-5 w-5" />
+                                        </summary>
+                                        {category.children &&
+                                            Array.isArray(
+                                                category.children
+                                            ) && (
+                                                <ul className="mt-2 space-y-1 pl-4">
+                                                    {category.children.map(
+                                                        (child) => {
+                                                            // Determine if the current URL starts with the child's route
+                                                            const isActiveLink =
+                                                                url.startsWith(
+                                                                    child.route
+                                                                );
+                                                            return (
+                                                                <li
+                                                                    key={
+                                                                        child.id
+                                                                    }
+                                                                >
+                                                                    <a
+                                                                        href={
+                                                                            child.route
+                                                                        }
+                                                                        className={`block p-2 text-base hover:bg-gray-50 ${
+                                                                            isActiveLink
+                                                                                ? "font-bold"
+                                                                                : "text-gray-900"
+                                                                        }`}
+                                                                    >
+                                                                        {
+                                                                            child.title
+                                                                        }
+                                                                    </a>
+                                                                </li>
+                                                            );
+                                                        }
+                                                    )}
+                                                </ul>
+                                            )}
+                                    </details>
+                                ))}
+                            </div>
                         </Dialog.Panel>
                     </Transition.Child>
                 </Dialog>

@@ -5,6 +5,7 @@ namespace App\Imports;
 use Illuminate\Support\Facades\Config;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Database\Eloquent\Model;
 
 class EntityImport implements ToModel, WithHeadingRow
 {
@@ -17,12 +18,15 @@ class EntityImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-        $modelClass = Config::get("models.{$this->entity}.class");
-        $modelInstance = new $modelClass();
+        $modelClass = Config::get("pages.{$this->entity}.model");
 
-        // Create an array with only the fillable attributes from the row data
-        $fillableData = array_intersect_key($row, array_flip($modelInstance->getFillable()));
+        if (!class_exists($modelClass) || !is_subclass_of($modelClass, Model::class)) {
+            // Handle error or skip
+            return null;
+        }
 
-        return new $modelClass($fillableData);
+        // Directly use the $row array, assuming its keys match your database column names
+        return new $modelClass($row);
     }
+    
 }

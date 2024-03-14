@@ -1,17 +1,6 @@
 <?php
 
 return [
-    'revenue' => [
-        'label' => 'Omset',
-        'type' => 'number',
-        'smallLabel' => 'Dalam Rupiah',
-        'validation' => 'nullable|numeric',
-    ],
-    'amount' => [
-        'label' => 'Jumlah',
-        'type' => 'number',
-        'validation' => 'nullable|numeric',
-    ],
     'quantity' => [
         'label' => 'Jumlah',
         'type' => 'number',
@@ -27,16 +16,6 @@ return [
         'type' => 'number',
         'validation' => 'nullable|numeric',
     ],
-    'budget' => [
-        'label' => 'Total PUM',
-        'type' => 'number',
-        'validation' => 'nullable|numeric',
-    ],
-    'cost' => [
-        'label' => 'Total PJUM',
-        'type' => 'number',
-        'validation' => 'nullable|numeric',
-    ],
     'usable_area' => [
         'label' => 'Jumlah Blok Pemanfaatan',
         'smallLabel' => 'Dalam Hektar',
@@ -44,7 +23,7 @@ return [
         'validation' => 'nullable|numeric',
     ],
     'usable_forest_area' => [
-        'label' => 'Jumlah Blok Pemanfaatan Hutan',
+        'label' => 'Jumlah Blok Pemanfaatan Berhutan',
         'smallLabel' => 'Dalam Hektar',
         'type' => 'number',
         'validation' => 'nullable|numeric',
@@ -83,7 +62,4 @@ return [
         'type' => 'number',
         'validation' => 'nullable|numeric',
     ],
-
-
-
 ];

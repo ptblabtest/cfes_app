@@ -1,16 +1,10 @@
 <?php
 
-
 return [
-    'image' => [
-        'label' => 'Foto',
-        'type' => 'image',
-        'validation' => 'image|max:2048',
-    ],
-    'pp_image' => [
-        'label' => 'Foto Diri',
-        'type' => 'image',
-        'validation' => 'image|max:2048',
+    'file' => [
+        'label' => 'Upload File',
+        'type' => 'file',
+        'smallLabel' => 'Upload file PDF, Word, Excel',
     ],
     'tor_file' => [
         'label' => 'Lampiran TOR',
