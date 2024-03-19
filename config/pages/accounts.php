@@ -19,6 +19,9 @@ return [
                 'type' => [
                     'label' => 'Tipe Akun', 'type' => 'text'
                 ],
+                'credit' => [
+                    'label' => 'Credit', 'type' => 'text'
+                ],
                 'is_active' => $commonFields['is_active'],
             ],
         ],

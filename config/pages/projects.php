@@ -58,8 +58,13 @@ return [
             'fields' => [
                 'title' => ['label' => 'Nama Proyek', 'type' => 'text'],
                 'deal_id' => $commonFields['deal_id'],
+                'amount' => [
+                    'label' => 'Nilai Project',
+                    'type' => 'currency',
+                    'validation' => 'nullable|numeric',
+                ],
                 'start_date' => $commonFields['start_date'],
-                'end_date' => $commonFields['end_date'],
+                'expected_close_date' => $commonFields['expected_close_date'],
             ],
         ],
     ],

@@ -2,26 +2,24 @@ import React, { useEffect, useState } from "react";
 import InputRenderer from "@/Components/Render/InputRenderer";
 import { SubmitButton } from "@/Components/Button/SubmitButton";
 import ConfirmationModal from "@/Components/Modal/ConfirmationModal";
-import { Inertia } from "@inertiajs/inertia";
 
 const FormCard = ({ item, entity, fields }) => {
-    const storeUrl = `/${entity}`;
-    const updateUrl = item ? `/${entity}/update/${item.id}` : "";
+    const isEditMode = item && item.id !== undefined;
+    const apiUrlPrefix = '/api'; // Ensure to use the API prefix
+    const storeUrl = `${apiUrlPrefix}/${entity}`;
+    const updateUrl = isEditMode ? `${apiUrlPrefix}/${entity}/update/${item.id}` : storeUrl;
 
     const [form, setForm] = useState({
         data: Object.keys(fields).reduce((acc, fieldName) => {
-            acc[fieldName] =
-                item && item[fieldName] !== null ? item[fieldName] : "";
+            acc[fieldName] = item && item[fieldName] !== undefined ? item[fieldName] : "";
             return acc;
         }, {}),
         errors: {},
     });
 
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
     const handleInputChange = (e) => {
         const { name, value, type, files } = e.target;
-        setForm((prevForm) => ({
+        setForm(prevForm => ({
             ...prevForm,
             data: {
                 ...prevForm.data,
@@ -32,29 +30,40 @@ const FormCard = ({ item, entity, fields }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+    
         let formData = new FormData();
-        Object.keys(form.data).forEach((key) => {
-            if (Array.isArray(form.data[key])) {
-                form.data[key].forEach((value) =>
-                    formData.append(`${key}[]`, value)
-                );
-            } else {
-                formData.append(
-                    key,
-                    form.data[key] instanceof File
-                        ? form.data[key]
-                        : String(form.data[key])
-                );
-            }
+        Object.keys(form.data).forEach(key => {
+            // Ensure values are appended to formData
+            formData.append(key, form.data[key]);
         });
-        if (item) {
-            formData.append("_method", "PUT");
+    
+        // Append _method 'PATCH' if in edit mode for method spoofing
+        if (isEditMode) {
+            formData.append('_method', 'PATCH');
         }
-        const url = item ? updateUrl : storeUrl;
-        Inertia.post(url, formData, {
-            onError: (errors) =>
-                setForm((prevForm) => ({ ...prevForm, errors })),
-            headers: { "Content-Type": "multipart/form-data" },
+    
+        const config = {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        };
+    
+        // Use 'post' for Axios regardless of the mode due to FormData and method spoofing
+        axios({
+            method: 'post', // Use post for both creating and updating
+            url: isEditMode ? updateUrl : storeUrl,
+            data: formData,
+            headers: config.headers
+        })
+        .then(response => {
+            console.log(response.data);
+            window.history.back(); // Or implement other success handling
+        })
+        .catch(error => {
+            if (error.response && error.response.data.errors) {
+                setForm(prevForm => ({
+                    ...prevForm,
+                    errors: error.response.data.errors
+                }));
+            }
         });
     };
 
@@ -73,7 +82,7 @@ const FormCard = ({ item, entity, fields }) => {
         });
     }, []);
 
-    const isEditMode = item !== undefined;
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     return (
         <>

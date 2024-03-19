@@ -1,86 +1,71 @@
 import React, { useEffect, useState } from "react";
-import { Inertia } from "@inertiajs/inertia";
+import axios from "axios";
 import InputRenderer from "@/Components/Render/InputRenderer";
 import { SubmitButton } from "@/Components/Button/SubmitButton";
 import ConfirmationModal from "@/Components/Modal/ConfirmationModal";
 
 const SectionFormCard = ({ item, entity, sections }) => {
     const isEditMode = item && item.id !== undefined;
-    const storeUrl = `/${entity}`;
-    const updateUrl = isEditMode ? `/${entity}/update/${item.id}` : storeUrl;
+    const apiUrlPrefix = '/api';
+    const storeUrl = `${apiUrlPrefix}/${entity}`;
+    const updateUrl = isEditMode ? `${apiUrlPrefix}/${entity}/update/${item.id}` : storeUrl;
 
-    const useFormHandler = () => {
-        const initializeFormData = () => {
-            const formData = {};
-            sections.forEach((section) => {
-                Object.keys(section.fields).forEach((fieldName) => {
-                    formData[fieldName] =
-                        item && item[fieldName] != null ? item[fieldName] : "";
-                });
+    // Modified initializeFormData to incorporate URL parameters directly
+    const initializeFormData = () => {
+        const formData = {};
+        const urlParams = new URLSearchParams(window.location.search); // Get URL parameters
+        sections.forEach((section) => {
+            Object.keys(section.fields).forEach((fieldName) => {
+                // Prioritize URL parameter if available, otherwise fallback to item data or default to ""
+                formData[fieldName] = urlParams.get(fieldName) !== null ? urlParams.get(fieldName) :
+                                      item && item[fieldName] !== undefined ? item[fieldName] : "";
             });
-            return formData;
-        };
-
-        const [form, setForm] = useState({
-            data: initializeFormData(),
-            errors: {},
         });
-
-        const handleInputChange = (e) => {
-            const { name, value, type, files } = e.target;
-            setForm((prevForm) => ({
-                ...prevForm,
-                data: {
-                    ...prevForm.data,
-                    [name]: type === "file" ? files[0] : value,
-                },
-            }));
-        };
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-
-            let formData = new FormData();
-            Object.keys(form.data).forEach((key) => {
-                const value = form.data[key];
-                formData.append(
-                    key,
-                    value instanceof File ? value : String(value)
-                );
-            });
-
-            if (item) {
-                formData.append("_method", "PUT");
-            }
-
-            Inertia.post(item ? updateUrl : storeUrl, formData, {
-                onError: (errors) =>
-                    setForm((prevForm) => ({ ...prevForm, errors })),
-                onSuccess: () =>
-                    setForm((prevForm) => ({ ...prevForm, errors: {} })),
-            });
-        };
-
-        return { form, handleInputChange, handleSubmit };
+        return formData;
     };
 
-    const { form, handleInputChange, handleSubmit } = useFormHandler();
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [form, setForm] = useState({
+        data: initializeFormData(),
+        errors: {},
+    });
 
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.forEach((value, key) => {
-            if (form.data.hasOwnProperty(key)) {
-                handleInputChange({
-                    target: {
-                        name: key,
-                        value: value,
-                        type: "text",
-                    },
-                });
-            }
+    const handleInputChange = (e) => {
+        const { name, value, type, files } = e.target;
+        setForm((prevForm) => ({
+            ...prevForm,
+            data: {
+                ...prevForm.data,
+                [name]: type === "file" ? files[0] : value,
+            },
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        Object.keys(form.data).forEach((key) => {
+            const value = form.data[key];
+            formData.append(key, value instanceof File ? value : value);
         });
-    }, [form.data]);
+
+        // Include _method 'PATCH' in formData if in edit mode
+        if (isEditMode) {
+            formData.append('_method', 'PATCH');
+        }
+
+        try {
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+            const response = await axios.post(isEditMode ? updateUrl : storeUrl, formData, config);
+            console.log(response.data);
+            window.history.back();
+        } catch (error) {
+            if (error.response && error.response.data.errors) {
+                setForm(prevForm => ({ ...prevForm, errors: error.response.data.errors }));
+            }
+        }
+    };
+
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     return (
         <>

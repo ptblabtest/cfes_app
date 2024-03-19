@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApprovalLogController;
-use App\Http\Controllers\Api\ModelDataController;
 use App\Http\Controllers\Api\SidebarController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +15,10 @@ Route::get('/statuses', [ApprovalLogController::class, 'getStatuses']);
 Route::get('/sidebar', [SidebarController::class, 'index']);
 Route::get('/approval-logs/latest', [ApprovalLogController::class, 'fetchLatest']);
 Route::post('/approval-logs/update', [ApprovalLogController::class, 'updateStatus']);
+
 Route::get('/{entity}', [ApiController::class, 'index']);
-Route::get('/{entity}/{id}', [ApiController::class, 'show']);
-Route::get('/modeldata', [ModelDataController::class, 'getModelData']);
+Route::get('/{entity}/show/{id}', [ApiController::class, 'show']);
+Route::patch('/{entity}/update/{id}', [ApiController::class, 'update']);
+Route::post('/{entity}', [ApiController::class, 'store']);
+
 

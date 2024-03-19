@@ -33,46 +33,18 @@ class DisplayController extends Controller
         $config = $this->config[$entity] ?? null;
         abort_unless($config, 404);
 
-        $items = $this->entityService->getItems($entity, $config);
-
-        return Inertia::render('Display/Index/Index', [
-            'items' => $items,
-            'entity' => $entity,
-            'tables' => $config['index']['tables'] ?? null,
-            'grids' => $config['index']['grids'] ?? null,
-            'title' => $config['title'],
+        return Inertia::render($config['view']['index'], [
             'auth' => ['user' => auth()->user()],
         ]);
     }
 
-    public function show($entity, $id)
+    public function show($entity)
     {
         $config = $this->config[$entity] ?? null;
         abort_unless($config, 404);
 
-        $item = $this->relationshipService->getItemWithDetails($entity, $id, $config);
-
-        if (!empty($config['redirect_show']['enabled'])) {
-            $parentField = $config['parent'] ?? null;
-            $parentId = $item->{$parentField} ?? null;
-            $redirectPath = $config['redirect_show']['path'] ?? null;
-            $showAction = $config['redirect_show']['show_action'] ?? 'show';
-
-            if ($parentField && $parentId && $redirectPath) {
-                return redirect("/{$redirectPath}/{$showAction}/{$parentId}");
-            }
-        }
-
-        $relationShowData = $this->relationshipService->processRelationShowData($item, $config);
-
         return Inertia::render($config['view']['show'], [
-            'entity' => $entity,
-            'item' => $item,
-            'cards' => $config['show']['cards'],
-            'relation_show' => $relationShowData,
-            'title' => $config['title'],
             'auth' => ['user' => auth()->user()],
-            'model' => $config['model'],
         ]);
     }
 
@@ -117,78 +89,5 @@ class DisplayController extends Controller
             'title' => $config['title'],
             'auth' => ['user' => auth()->user()],
         ]);
-    }
-
-    public function store(Request $request, $entity)
-    {
-        $config = $this->config[$entity] ?? null;
-        abort_unless($config && isset($config['form']), 404);
-
-        $newRecord = new $config['model'];
-        $newRecord->fill($request->all());
-
-        if (isset($config['form']['sections'])) {
-            foreach ($config['form']['sections'] as $section) {
-                $this->mediaService->handleMediaUploads($newRecord, $request->all(), $section['fields']);
-            }
-        } else {
-            $this->mediaService->handleMediaUploads($newRecord, $request->all(), $config['form']['fields']);
-        }
-
-        $newRecord->save();
-
-        $parentField = $config['parent'] ?? null;
-        $parentId = $parentField ? $newRecord->{$parentField} : null;
-
-        if ($parentId) {
-            $redirectPath = $config['redirect_show']['path'] ?? $entity;
-            $showAction = $config['redirect_show']['show_action'] ?? 'show';
-            return redirect("/{$redirectPath}/{$showAction}/" . $parentId)
-                ->with('message', 'Data successfully updated.');
-        } else {
-            return redirect("/{$entity}/show/" . $newRecord->id)
-                ->with('message', 'Data successfully updated.');
-        }
-    }
-
-    public function update(Request $request, $entity, $id)
-    {
-        $config = $this->config[$entity] ?? null;
-        abort_unless($config && isset($config['form']), 404);
-
-        $record = $config['model']::findOrFail($id);
-        $record->fill($request->except(['file', 'image']));
-
-        if (isset($config['form']['sections'])) {
-            foreach ($config['form']['sections'] as $section) {
-                $this->mediaService->handleMediaUploads($record, $request->all, $section['fields']);
-            }
-        } else {
-            $this->mediaService->handleMediaUploads($record, $request->all(), $config['form']['fields']);
-        }
-
-        $record->save();
-        $parentField = $config['parent'] ?? null;
-        $parentId = $parentField ? $record->{$parentField} : null;
-
-        if ($parentId) {
-            $redirectPath = $config['redirect_show']['path'] ?? $entity;
-            $showAction = $config['redirect_show']['show_action'] ?? 'show';
-            return redirect("/{$redirectPath}/{$showAction}/" . $parentId)
-                ->with('message', 'Data successfully updated.');
-        } else {
-            return redirect("/{$entity}/show/" . $record->id)
-                ->with('message', 'Data successfully updated.');
-        }
-    }
-
-    public function destroy($entity, $id)
-    {
-        $config = $this->config[$entity] ?? null;
-        abort_unless($config, 404);
-
-        $config['model']::findOrFail($id)->delete();
-
-        return redirect()->back()->with('success', 'Item deleted successfully.');
     }
 }

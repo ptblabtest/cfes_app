@@ -24,8 +24,8 @@ class ApprovalLogController extends Controller
         $modelClass = $config['model'];
 
         $latestLog = $modelClass::where('model_id', $modelId)
-                                ->latest('log_number')
-                                ->first();
+            ->latest('log_number')
+            ->first();
 
         if (!$latestLog) {
             return response()->json([
@@ -51,14 +51,14 @@ class ApprovalLogController extends Controller
             'status' => 'required|string',
             'comment' => 'sometimes|string',
         ]);
-    
+
         $modelClassName = Str::singular(ucfirst($validated['modelType']));
         $modelClass = "App\\Models\\" . $modelClassName;
-    
+
         if (!class_exists($modelClass)) {
             return response()->json(['message' => 'Invalid model type'], 404);
         }
-    
+
         $log = ApprovalLog::create([
             'model_type' => $modelClass,
             'model_id' => $validated['modelId'],
@@ -69,7 +69,7 @@ class ApprovalLogController extends Controller
                 ->max('log_number') + 1,
             // 'approved_by' should be determined based on your application's auth logic
         ]);
-    
+
         return response()->json(['message' => 'Status updated successfully', 'log' => $log]);
     }
 
@@ -81,5 +81,4 @@ class ApprovalLogController extends Controller
             'approved' => ['label' => 'Approved', 'class' => 'bg-green-500'],
         ]);
     }
-    
 }

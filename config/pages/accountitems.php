@@ -16,6 +16,9 @@ return [
                     'label' => 'Nama Item', 'type' => 'text'
                 ],
                 'account_id' => $commonFields['account_id'],
+                'credit' => [
+                    'label' => 'Credit', 'type' => 'text'
+                ],
             ],
         ],
     ],

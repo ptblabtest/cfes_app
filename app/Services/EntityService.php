@@ -17,14 +17,7 @@ class EntityService
 
         $user = Auth::user();
 
-        // Ensure the user has the 'user' role before applying 'created_by' filtering
-        if ($user->hasRole('user')) {
-            // Use the instantiated model to get the table name and check for 'created_by' column
-            if (Schema::hasColumn($modelInstance->getTable(), 'created_by')) {
-                // Apply filtering to include only items created by the logged-in user
-                $query->where('created_by', $user->id);
-            }
-        }
+
 
         if (!empty($config['relationship']) && is_array($config['relationship'])) {
             $query->with($config['relationship']);

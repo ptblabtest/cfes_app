@@ -47,10 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/{entity}', [DisplayController::class, 'index'])->name('entity.index');
     Route::get('/{entity}/show/{id}', [DisplayController::class, 'show'])->name('entity.show');
     Route::get('/{entity}/create', [DisplayController::class, 'create']);
-    Route::post('/{entity}', [DisplayController::class, 'store']);
     Route::get('/{entity}/edit/{id}', [DisplayController::class, 'edit'])->name('entity.edit');
-    Route::put('/{entity}/update/{id}', [DisplayController::class, 'update']);
-    Route::delete('/{entity}/{id}', [DisplayController::class, 'destroy']);
 
     Route::get('/permissions', [PermissionController::class, 'index']);
     Route::post('/permissions/change-role', [PermissionController::class, 'changeRole']);
