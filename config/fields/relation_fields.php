@@ -161,7 +161,7 @@ return [
         },
     ],
     'deal_id' => [
-        'label' => 'Peluang Bisnis',
+        'label' => 'Kesepakatan',
         'type' => 'related',
         'relationship' => 'deals',
         'relation_item' => 'combined_id',
@@ -203,12 +203,20 @@ return [
                 })->toArray();
         },
     ],
-    'model_id' => [
-        'label' => 'Model ID',
-        'type' => 'text',
-        'background' => 'bg-gray-200',
-        'smallLabel' => 'Otomatis terisi, tidak perlu diisi lagi'
+    'product_id' => [
+        'label' => 'Nama Produk',
+        'smallLabel' => 'Pilih Sesuai Nama Produk',
+        'type' => 'related',
+        'relationship' => 'product',
+        'relation_item' => 'name',
+        'options' => function () {
+            return App\Models\Product::all()
+                ->map(function ($option) {
+                    return ['value' => $option->id, 'label' => $option->name];
+                })->toArray();
+        },
     ],
+    
 
 
 ];

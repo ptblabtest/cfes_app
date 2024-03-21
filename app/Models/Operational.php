@@ -12,7 +12,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class SalesActivity extends Model implements HasMedia
+class Operational extends Model implements HasMedia
 {
     use HasFactory;
     use LogsActivity;
@@ -20,13 +20,8 @@ class SalesActivity extends Model implements HasMedia
     use HasCreator, HasFinancials, HasDocument;
 
     protected $fillable = [
-        'sales_type', 'notes', 'start_date', 'end_date', 'deal_id', 'created_by'
+        'project_type', 'notes', 'start_date', 'end_date', 'deal_id', 'created_by'
     ];
-
-    public function deals()
-    {
-        return $this->belongsTo(Deal::class, 'deal_id');
-    }
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
@@ -40,4 +35,12 @@ class SalesActivity extends Model implements HasMedia
             ->useLogName($logName)
             ->logFillable();
     }
+
+
+
+
+
+
+
+
 }

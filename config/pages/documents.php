@@ -13,14 +13,13 @@ return
         'index' => [
             'tables' => [
                 'fields' => [
+                    'file' => $commonFields['file'],
                     'title' => [
                         'label' => 'Judul Dokumen',
                         'type' => 'text',
                     ],
                     'doc_type' => $commonFields['doc_type'],
-                    'description' => $commonFields['description'],
                     'model_type' => $commonFields['model_type'],
-                    'model_id' => $commonFields['model_id'],
                     'created_by' => $commonFields['created_by'],
                 ],
             ],
@@ -43,7 +42,12 @@ return
                             'validation' => 'nullable|string',
                         ],
                         'doc_type' => $commonFields['doc_type'],
-                        'description' => $commonFields['description'],
+                        'description' => [
+                            'label' => 'Deskripsi',
+                            'type' => 'text',
+                            'validation' => 'nullable|string',
+                            'smallLabel' => 'Isi penjelasan secara ringkas, deskripsi mengenai dokumen yang anda ingin upload',
+                        ],
                     ],
                 ],
                 [

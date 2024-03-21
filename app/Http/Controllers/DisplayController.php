@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Services\EntityService;
 use App\Services\MediaService;
 use App\Services\RelationshipService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Config;
 

@@ -23,27 +23,28 @@ class SidebarItemsTableSeeder extends Seeder
                 'title' => "Customer Relationship Management (CRM)",
                 'icon' => "search",
                 'items' => [
-                    ['name' => "Leads", 'route' => "/leads"],
-                    ['name' => "Deals", 'route' => "/deals"],
+                    ['name' => "Calon Client", 'route' => "/leads"],
+                    ['name' => "Kesepakatan", 'route' => "/deals"],
+                    ['name' => "Kegiatan Sales", 'route' => "/salesactivities"],
+                    
                 ],
             ],
             [
                 'title' => "Project Management",
                 'icon' => "search",
                 'items' => [
-                    ['name' => "Projects", 'route' => "/projects"],
+                    ['name' => "Implementasi", 'route' => "/projects"],
+                    ['name' => "Kegiatan Project", 'route' => "/projectactivities"],
                 ],
             ],
             [
-                'title' => "Input CRM",
+                'title' => "Tambahan",
                 'icon' => "search",
                 'items' => [
-                    ['name' => "Budgets", 'route' => "/budgets"],
-                    ['name' => "Expenses", 'route' => "/expenses"],
-                    ['name' => "Advance", 'route' => "/advances"],
-                    ['name' => "Documents", 'route' => "/documents"],
-                    ['name' => "Sales Activity", 'route' => "/salesactivities"],
-                    ['name' => "Project Activity", 'route' => "/projectactivities"],
+                    ['name' => "Anggaran", 'route' => "/budgets"],
+                    ['name' => "Biaya", 'route' => "/expenses"],
+                    ['name' => "Pengajuan Uang Muka", 'route' => "/advances"],
+                    ['name' => "Dokumen", 'route' => "/documents"],
                 ],
             ],
             [
@@ -55,6 +56,7 @@ class SidebarItemsTableSeeder extends Seeder
                     ['name' => "Customers", 'route' => "/customers"],
                     ['name' => "Vendors", 'route' => "/vendors"],
                     ['name' => "Products", 'route' => "/products"],
+                    ['name' => "Lokasi", 'route' => "/location"],
                 ],
             ],
             [

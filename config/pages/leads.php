@@ -3,9 +3,9 @@
 return
     [
         'model' => App\Models\Lead::class,
-        'title' => 'Prospek',
+        'title' => 'Calon Client',
         'parent' => 'lead_id',
-        'relationship' => ['creator'],
+        'relationship' => ['creator', 'product'],
         'view' => [
             'index' => 'Display/Index/Index',
             'form' => 'Display/Form/Form',
@@ -15,13 +15,13 @@ return
             'tables' => [
                 'fields' => [
                     'name' => [
-                        'label' => 'Nama Prospek',
+                        'label' => 'Nama Calon Client',
                         'type' => 'text',
                         'validation' => 'nullable|string',
                     ],
                     'email' => $commonFields['email'],
                     'phone' => $commonFields['phone'],
-                    'interest' => $commonFields['interest'],
+                    'product_id' => $commonFields['product_id'],
                     'source' => $commonFields['source'],
                     'created_by' => $commonFields['created_by'],
                 ],
@@ -31,10 +31,10 @@ return
             'sections' => [
                 [
                     'titleform' => 'Kontak',
-                    'subtitleform' => 'Masukkan informasi kontak dari prospek',
+                    'subtitleform' => 'Masukkan informasi kontak dari calon client',
                     'fields' => [
                         'name' => [
-                            'label' => 'Nama Prospek',
+                            'label' => 'Nama Calon Client',
                             'type' => 'text',
                             'validation' => 'nullable|string',
                         ],
@@ -46,7 +46,7 @@ return
                     'titleform' => 'Deskripsi',
                     'subtitleform' => 'Detailkan informasi mengenai minat dan bagaimana prospek mengetahui tentang layanan atau produk perusahaan',
                     'fields' => [
-                        'interest' => $commonFields['interest'],
+                        'product_id' => $commonFields['product_id'],
                         'source' => $commonFields['source'],
                     ],
                 ],
@@ -56,35 +56,19 @@ return
             'cards' => [
                 'fields' => [
                     'name' => [
-                        'label' => 'Nama Prospek',
+                        'label' => 'Nama Calon Client',
                         'type' => 'text',
                         'validation' => 'nullable|string',
                     ],
                     'email' => $commonFields['email'],
                     'phone' => $commonFields['phone'],
-                    'interest' => $commonFields['interest'],
+                    'product_id' => $commonFields['product_id'],
                     'source' => $commonFields['source'],
                     'created_by' => $commonFields['created_by'],
                 ],
             ],
         ],
         'relation_show' => [
-            'deals' => [
-                'model' => App\Models\Deal::class,
-                'title' => 'Calon Transaksi',
-                'entity' => 'deals',
-                'relationship' => ['creator', 'lead', 'customer'],
-                'query' => true,
-                'create' => [
-                    'url' => '/deals/create',
-                ],
-                'fields' => [
-                    'customer_id' => $commonFields['customer_id'],
-                    'potential_revenue' => $commonFields['potential_revenue'],
-                    'expected_close_date' => $commonFields['expected_close_date'],
-                    'description' => $commonFields['description'],
-                    'created_by' => $commonFields['created_by'],
-                ],
-            ],
+            'deals' => include('relations/deals.php'),
         ],
     ];

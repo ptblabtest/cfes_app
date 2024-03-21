@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'model' => App\Models\ProjectActivity::class,
-    'title' => 'Kegiatan Project',
-    'relationship' => ['project', 'creator'],
+    'model' => App\Models\Operational::class,
+    'title' => 'Operasional',
+    'relationship' => ['creator', 'documents'],
     'view' => [
         'index' => 'Display/Index/Index',
         'form' => 'Display/Form/Form',
@@ -12,18 +12,16 @@ return [
     'index' => [
         'tables' => [
             'fields' => [
-                'project_id' => $commonFields['project_id'],
-                'project_type' => $commonFields['project_type'],
-                'notes' => $commonFields['notes'],
                 'start_date' => $commonFields['start_date'],
                 'end_date' => $commonFields['end_date'],
+                'project_type' => $commonFields['project_type'],
+                'notes' => $commonFields['notes'],
                 'created_by' => $commonFields['created_by'],
             ],
         ],
     ],
     'form' => [
         'fields' => [
-            'project_id' => $commonFields['project_id'],
             'start_date' => $commonFields['start_date'],
             'end_date' => $commonFields['end_date'],
             'project_type' => $commonFields['project_type'],
@@ -33,7 +31,6 @@ return [
     'show' => [
         'cards' => [
             'fields' => [
-                'project_id' => $commonFields['project_id'],
                 'start_date' => $commonFields['start_date'],
                 'end_date' => $commonFields['end_date'],
                 'project_type' => $commonFields['project_type'],

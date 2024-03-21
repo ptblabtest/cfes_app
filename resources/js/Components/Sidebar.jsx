@@ -12,7 +12,6 @@ function Sidebar() {
     const { url } = usePage();
 
     const [sidebarConfig, setSidebarConfig] = useState([]);
-    const [activeCategory, setActiveCategory] = useState(null);
 
     useEffect(() => {
         // Fetch the sidebar configuration from the backend on component mount
@@ -28,16 +27,6 @@ function Sidebar() {
 
         fetchSidebarConfig();
     }, []); // This effect runs once on mount
-
-    useEffect(() => {
-        // Update active category based on URL and fetched sidebarConfig
-        const basePath = url.split("/")[1];
-        const currentCategory = sidebarConfig.find((category) =>
-            category.children.some((item) => item.route.split("/")[1] === basePath)
-        );
-
-        setActiveCategory(currentCategory ? currentCategory.title : null);
-    }, [url, sidebarConfig]); // This effect runs on url or sidebarConfig change
 
     return (
         <div className="bg-teal-50">
@@ -72,7 +61,7 @@ function Sidebar() {
                                     <details
                                         key={category.title}
                                         className="mb-3"
-                                        open={activeCategory === category.title}
+                                        open={true} // Keep all details elements open
                                     >
                                         <summary className="flex justify-between items-center text-lg font-medium cursor-pointer">
                                             {category.title}
@@ -85,7 +74,6 @@ function Sidebar() {
                                                 <ul className="mt-2 space-y-1 pl-4">
                                                     {category.children.map(
                                                         (child) => {
-                                                            // Determine if the current URL starts with the child's route
                                                             const isActiveLink =
                                                                 url.startsWith(
                                                                     child.route

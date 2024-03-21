@@ -14,17 +14,22 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Lead extends Model implements HasMedia
 {
     use HasFactory;
-    use LogsActivity; 
+    use LogsActivity;
     use InteractsWithMedia;
     use HasCreator, HasApproval;
 
     protected $fillable = [
-        'name', 'email', 'phone', 'interest', 'source', 'created_by'
+        'name', 'email', 'phone', 'product_id', 'source', 'created_by'
     ];
 
     public function deals()
     {
         return $this->hasMany(Deal::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function getStatusAttribute()
@@ -38,7 +43,7 @@ class Lead extends Model implements HasMedia
         $latestLog = $this->approvalLogs()->latest()->first();
         return $latestLog ? $latestLog->comment : null;
     }
-    
+
     protected $appends = ['status', 'comment'];
 
 
@@ -54,5 +59,4 @@ class Lead extends Model implements HasMedia
             ->useLogName($logName)
             ->logFillable();
     }
-
 }

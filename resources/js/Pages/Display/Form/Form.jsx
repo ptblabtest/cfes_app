@@ -12,7 +12,7 @@ const Form = ({ entity, item, fields, sections, title }) => {
         <AuthenticatedLayout user={auth.user}>
             <Head title={title} />
             <HeaderTitle
-                title={"Form " + title}
+                title={`${item ? "Edit" : "Tambah"} ${title}`}
                 breadcrumbs={[
                     { name: "Home", url: "/dashboard" },
                     { name: title, url: `/${entity}` },

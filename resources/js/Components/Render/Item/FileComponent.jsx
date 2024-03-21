@@ -5,8 +5,6 @@ const FileComponent = ({ fileUrl }) => {
     if (!fileUrl) return "No File";
 
     const fileExtension = fileUrl.split(".").pop().toLowerCase();
-    const urlParts = fileUrl.split("/");
-    const fileName = urlParts.pop() || "Unknown File";
 
     return (
         <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
@@ -17,7 +15,7 @@ const FileComponent = ({ fileUrl }) => {
                 />
                 <div className="ml-4 flex min-w-0 flex-1 gap-2">
                     <span className="truncate font-medium">
-                        {fileName}
+                        File
                     </span>
                 </div>
             </div>

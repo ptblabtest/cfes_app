@@ -20,7 +20,7 @@ class ProjectActivity extends Model implements HasMedia
     use HasCreator, HasFinancials, HasDocument;
 
     protected $fillable = [
-        'project_type', 'notes', 'date', 'project_id', 'created_by'
+        'project_type', 'notes', 'start_date', 'end_date', 'project_id', 'created_by'
     ];
 
     public function project()

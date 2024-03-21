@@ -3,7 +3,7 @@
 return
     [
         'model' => App\Models\Advance::class,
-        'title' => 'Advance',
+        'title' => 'Pengajuan Uang Muka',
         'relationship' => ['creator'],
         'view' => [
             'index' => 'Display/Index/Index',
@@ -15,7 +15,7 @@ return
                 'fields' => [
                     'advance_number' => $commonFields['advance_number'],
                     'amount' => [
-                        'label' => 'Jumlah Advance',
+                        'label' => 'Jumlah PUM',
                         'type' => 'currency',
                     ],
                     'description' => $commonFields['description'],
@@ -28,11 +28,11 @@ return
         'form' => [
             'sections' => [
                 [
-                    'titleform' => 'Detail Advance',
+                    'titleform' => 'Detail PUM',
                     'fields' => [
                         'advance_number' => $commonFields['advance_number'],
                         'amount' => [
-                            'label' => 'Jumlah Advance',
+                            'label' => 'Jumlah PUM',
                             'type' => 'number',
                         ],
                         'description' => $commonFields['description'],
@@ -47,7 +47,7 @@ return
                 'fields' => [
                     'advance_number' => $commonFields['advance_number'],
                     'amount' => [
-                        'label' => 'Jumlah Advance',
+                        'label' => 'Jumlah PUM',
                         'type' => 'number',
                     ],
                     'description' => $commonFields['description'],

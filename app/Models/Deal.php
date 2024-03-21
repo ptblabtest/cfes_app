@@ -17,7 +17,7 @@ class Deal extends Model implements HasMedia
     use HasFactory;
     use LogsActivity;
     use InteractsWithMedia;
-    use HasCreator, HasFinancials, HasDocument;
+    use HasCreator, HasDocument;
 
     protected $fillable = [
         'potential_revenue', 'expected_close_date', 'description', 'sales_status', 'lead_id', 'customer_id', 'created_by'

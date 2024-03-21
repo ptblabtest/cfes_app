@@ -19,9 +19,9 @@ return[
         'validation' => 'nullable|numeric',
     ],
     'potential_revenue' => [
-        'label' => 'Pendapatan Potensial',
+        'label' => 'Potensi Pendapatan',
         'type' => 'currency',
-        'smallLabel' => 'Estimasi nilai pendapatan dari kesepakatan ini',
+        'smallLabel' => 'Estimasi nilai pendapatan dari kesepakatan ini. Isi dalam Rp.',
         'validation' => 'nullable|numeric',
     ],
 ];

@@ -52,7 +52,9 @@ class OptionTableSeeder extends Seeder
                 'type' => 'select',
                 'options' => [
                     ['value' => 'Pelatihan', 'label' => 'Pelatihan'],
-                    ['value' => 'Kunjungan', 'label' => 'Kunjungan'],
+                    ['value' => 'Monitoring', 'label' => 'Monitoring'],
+                    ['value' => 'Patroli', 'label' => 'Patroli'],
+                    ['value' => 'Lainnya', 'label' => 'Lainnya'],
                 ],
             ],
         ];
