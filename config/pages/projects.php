@@ -69,7 +69,7 @@ return [
                     'validation' => 'nullable|numeric',
                 ],
                 'start_date' => $commonFields['start_date'],
-                'expected_close_date' => $commonFields['expected_close_date'],
+                'end_date' => $commonFields['end_date'],
             ],
         ],
     ],
