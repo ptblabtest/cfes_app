@@ -53,7 +53,6 @@ return [
                     'location_id' => $commonFields['location_id'],
                     'start_date' => $commonFields['start_date'],
                     'end_date' => $commonFields['end_date'],
-                    'pmanager' => $commonFields['pmanager'],
                 ],
             ],
         ],

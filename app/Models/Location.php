@@ -21,6 +21,11 @@ class Location extends Model implements HasMedia
         'forest_name', 'village_name', 'address', 'city_name', 'province_name', 'forest_category'
     ];
 
+    public function project()
+    {
+        return $this->hasMany(Project::class, 'location_id');
+    }
+
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 
