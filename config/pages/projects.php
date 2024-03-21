@@ -4,7 +4,7 @@ return [
     'model' => App\Models\Project::class,
     'title' => 'Implementasi',
     'parent' => 'project_id',
-    'relationship' => ['deals', 'creator', 'location'],
+    'relationship' => ['deals', 'creator', 'location', 'product'],
     'view' => [
         'index' => 'Display/Index/Index',
         'form' => 'Display/Form/Form',
@@ -61,7 +61,9 @@ return [
         'cards' => [
             'fields' => [
                 'title' => ['label' => 'Nama Project', 'type' => 'text'],
+                'location_id' => $commonFields['location_id'],
                 'deal_id' => $commonFields['deal_id'],
+                'product_id' => $commonFields['product_id'],
                 'amount' => [
                     'label' => 'Nilai Project',
                     'type' => 'currency',

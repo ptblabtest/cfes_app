@@ -18,7 +18,7 @@ class Project extends Model
     use HasCreator, HasFinancials, HasDocument;
 
     protected $fillable = [
-        'title', 'location_id', 'parent_id', 'deal_id', 'amount', 'start_date', 'expected_close_date', 'status', 'created_by'
+        'title', 'location_id', 'product_id', 'parent_id', 'deal_id', 'amount', 'start_date', 'expected_close_date', 'status', 'created_by'
     ];
 
     public function deals()
@@ -29,6 +29,11 @@ class Project extends Model
     public function location()
     {
         return $this->belongsTo(Location::class, 'location_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function projectActivities()
