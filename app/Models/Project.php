@@ -26,7 +26,7 @@ class Project extends Model
         return $this->belongsTo(Deal::class, 'deal_id');
     }
 
-    public function location_id()
+    public function location()
     {
         return $this->belongsTo(Location::class, 'location_id');
     }

@@ -4,7 +4,7 @@ return [
     'model' => App\Models\Project::class,
     'title' => 'Implementasi',
     'parent' => 'project_id',
-    'relationship' => ['deals', 'creator'],
+    'relationship' => ['deals', 'creator', 'location'],
     'view' => [
         'index' => 'Display/Index/Index',
         'form' => 'Display/Form/Form',
