@@ -56,7 +56,7 @@ class SidebarItemsTableSeeder extends Seeder
                     ['name' => "Customers", 'route' => "/customers"],
                     ['name' => "Vendors", 'route' => "/vendors"],
                     ['name' => "Products", 'route' => "/products"],
-                    ['name' => "Lokasi", 'route' => "/location"],
+                    ['name' => "Lokasi", 'route' => "/locations"],
                 ],
             ],
             [

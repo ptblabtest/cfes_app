@@ -18,12 +18,17 @@ class Project extends Model
     use HasCreator, HasFinancials, HasDocument;
 
     protected $fillable = [
-        'title', 'parent_id', 'deal_id', 'amount', 'start_date', 'expected_close_date', 'status', 'created_by'
+        'title', 'location_id', 'parent_id', 'deal_id', 'amount', 'start_date', 'expected_close_date', 'status', 'created_by'
     ];
 
     public function deals()
     {
         return $this->belongsTo(Deal::class, 'deal_id');
+    }
+
+    public function location_id()
+    {
+        return $this->belongsTo(Location::class, 'location_id');
     }
 
     public function projectActivities()
