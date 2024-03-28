@@ -27,7 +27,10 @@ class NotifLog extends Notification
     {
         return [
             'model_id' => $this->model->id,
+            'model_type' => get_class($this->model),
             'action' => $this->action,
+            'message' => "A {$this->model->getTable()} model has been {$this->action}.",
+            // Include more data as needed
         ];
     }
 }

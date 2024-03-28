@@ -14,14 +14,14 @@ return [
         },
     ],
     'project_id' => [
-        'label' => 'Nama Project',
+        'label' => 'No Implementasi',
         'type' => 'related',
         'relationship' => 'project',
-        'relation_item' => 'title',
+        'relation_item' => 'combined_id',
         'options' => function () {
             return App\Models\Project::all()
             ->map(function ($option) {
-                return ['value' => $option->id, 'label' => $option->title];
+                return ['value' => $option->id, 'label' => $option->combined_id];
             })->toArray();
         },
     ],
@@ -50,78 +50,16 @@ return [
         },
     ],
     'advance_id' => [
-        'label' => 'Nomor Advance',
+        'label' => 'No PUM',
         'type' => 'related',
         'smallLabel' => 'Isi Nomor Advance jika biaya ini dari Advance',
         'relationship' => 'advance',
-        'relation_item' => 'advance_number',
+        'relation_item' => 'advance_reg_no',
         'options' => function () {
             return App\Models\Advance::all()
             ->map(function ($option) {
-                return ['value' => $option->id, 'label' => $option->advance_number];
+                return ['value' => $option->id, 'label' => $option->advance_reg_no];
             })->toArray();
-        },
-    ],
-    'plan_id' => [
-        'label' => 'Judul TOR/BTOR',
-        'type' => 'related',
-        'relationship' => 'plan',
-        'relation_item' => 'title',
-        'options' => function () {
-            return App\Models\Plan::all()
-                ->map(function ($option) {
-                    return ['value' => $option->id, 'label' => $option->title];
-                })->toArray();
-        },
-    ],
-    'org_id' => [
-        'label' => 'Lembaga',
-        'type' => 'related',
-        'relationship' => 'org',
-        'relation_item' => 'name',
-        'options' => function () {
-            return App\Models\Org::all()
-                ->map(function ($option) {
-                    return ['value' => $option->id, 'label' => $option->name];
-                })->toArray();
-        },
-    ],
-    'plant_id' => [
-        'label' => 'Nama Tumbuhan',
-        'smallLabel' => 'Pilih Sesuai Nama Tumbuhan',
-        'type' => 'related',
-        'relationship' => 'plant',
-        'relation_item' => 'name',
-        'options' => function () {
-            return App\Models\Plant::all()
-                ->map(function ($option) {
-                    return ['value' => $option->id, 'label' => $option->name];
-                })->toArray();
-        },
-    ],
-    'animal_id' => [
-        'label' => 'Nama Satwa',
-        'smallLabel' => 'Pilih Sesuai Nama Satwa',
-        'type' => 'related',
-        'relationship' => 'animal',
-        'relation_item' => 'name',
-        'options' => function () {
-            return App\Models\Animal::all()
-                ->map(function ($option) {
-                    return ['value' => $option->id, 'label' => $option->name];
-                })->toArray();
-        },
-    ],
-    'ent_id' => [
-        'label' => 'Kelompok Usaha',
-        'type' => 'related',
-        'relationship' => 'entlist',
-        'relation_item' => 'name',
-        'options' => function () {
-            return App\Models\EntList::all()
-                ->map(function ($option) {
-                    return ['value' => $option->id, 'label' => $option->name];
-                })->toArray();
         },
     ],
     'customer_id' => [
@@ -149,7 +87,7 @@ return [
         },
     ],
     'lead_id' => [
-        'label' => 'Prospek',
+        'label' => 'Nama Calon Client',
         'type' => 'related',
         'relationship' => 'lead',
         'relation_item' => 'name',
@@ -161,51 +99,20 @@ return [
         },
     ],
     'deal_id' => [
-        'label' => 'Kesepakatan',
+        'label' => 'No Kesepakatan',
         'type' => 'related',
         'relationship' => 'deals',
         'relation_item' => 'combined_id',
         'options' => function () {
-            $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
             return App\Models\Deal::all()
-                ->map(function ($option) use ($formatter) {
-                    $customer_name = optional($option->customer)->name; 
-                    $formattedRevenue = $formatter->formatCurrency($option->potential_revenue, 'IDR');
-                    $label = $customer_name . ' - ' . $formattedRevenue;
-                    return [
-                        'value' => $option->id, 
-                        'label' => $label
-                    ];
-                })->toArray();
-        },
-    ],
-    'pmanager' => [
-        'label' => 'Project Manager',
-        'type' => 'related',
-        'relationship' => 'pmanager',
-        'relation_item' => 'name',
-        'options' => function () {
-            return App\Models\User::all()
-                ->map(function ($option) {
-                    return ['value' => $option->id, 'label' => $option->name];
-                })->toArray();
-        },
-    ],
-    'approver' => [
-        'label' => 'Approver',
-        'type' => 'related',
-        'relationship' => 'approver',
-        'relation_item' => 'name',
-        'options' => function () {
-            return App\Models\User::all()
-                ->map(function ($option) {
-                    return ['value' => $option->id, 'label' => $option->name];
-                })->toArray();
+            ->map(function ($option) {
+                return ['value' => $option->id, 'label' => $option->combined_id];
+            })->toArray();
         },
     ],
     'product_id' => [
-        'label' => 'Nama Produk',
-        'smallLabel' => 'Pilih Sesuai Nama Produk',
+        'label' => 'Nama Program',
+        'smallLabel' => 'Pilih Sesuai Nama Program',
         'type' => 'related',
         'relationship' => 'product',
         'relation_item' => 'name',

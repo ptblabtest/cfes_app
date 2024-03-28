@@ -54,9 +54,9 @@ class SidebarItemsTableSeeder extends Seeder
                     ['name' => "Chart of Accounts (COA)", 'route' => "/accounts"],
                     ['name' => "Item Account", 'route' => "/accountitems"],
                     ['name' => "Customers", 'route' => "/customers"],
-                    ['name' => "Vendors", 'route' => "/vendors"],
-                    ['name' => "Products", 'route' => "/products"],
+                    ['name' => "Program", 'route' => "/products"],
                     ['name' => "Lokasi", 'route' => "/locations"],
+                    ['name' => "Vendors", 'route' => "/vendors"],
                 ],
             ],
             [

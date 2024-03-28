@@ -15,5 +15,6 @@ return array_merge(
     include __DIR__ . '/fields/model_fields.php',
     include __DIR__ . '/fields/boolean_fields.php',
     include __DIR__ . '/fields/currency_fields.php',
+    include __DIR__ . '/fields/user_fields.php',
 );
 

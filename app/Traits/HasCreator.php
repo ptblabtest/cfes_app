@@ -12,16 +12,11 @@ trait HasCreator
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public static function boot()
+    public static function bootHasCreator()
     {
-        parent::boot();
-
         static::creating(function ($model) {
-            if (auth()->check()) {
-                if (in_array('created_by', $model->getFillable())) {
-                    $model->created_by = auth()->id();
-                }
-            }
+            $model->created_by = auth()->id();
         });
     }
+
 }

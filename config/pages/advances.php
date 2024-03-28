@@ -1,60 +1,58 @@
 <?php
 
-return
-    [
-        'model' => App\Models\Advance::class,
-        'title' => 'Pengajuan Uang Muka',
-        'relationship' => ['creator'],
-        'view' => [
-            'index' => 'Display/Index/Index',
-            'form' => 'Display/Form/Form',
-            'show' => 'Display/Show/Show',
-        ],
-        'index' => [
-            'tables' => [
-                'fields' => [
-                    'advance_number' => $commonFields['advance_number'],
-                    'amount' => [
-                        'label' => 'Jumlah PUM',
-                        'type' => 'currency',
-                    ],
-                    'description' => $commonFields['description'],
-                    'model_type' => $commonFields['model_type'],
-                    'expenses_total' => ['label' => 'Total Biaya', 'type' => 'currency'],
-                    'created_by' => $commonFields['created_by'],
+return [
+    'model' => App\Models\Advance::class,
+    'title' => 'Pengajuan Uang Muka',
+    'relationship' => ['creator'],
+    'index' => [
+        'tables' => [
+            'fields' => [
+                'advance_reg_no' => $commonFields['advance_reg_no'],
+                'description' => $commonFields['description'],
+                'amount' => [
+                    'label' => 'Jumlah PUM',
+                    'type' => 'currency',
                 ],
+                'expenses_total' => ['label' => 'Total PJUM', 'type' => 'currency'],
+                'model_type' => $commonFields['model_type'],
+                'created_by' => $commonFields['created_by'],
             ],
         ],
-        'form' => [
-            'sections' => [
-                [
-                    'titleform' => 'Detail PUM',
-                    'fields' => [
-                        'advance_number' => $commonFields['advance_number'],
-                        'amount' => [
-                            'label' => 'Jumlah PUM',
-                            'type' => 'number',
-                        ],
-                        'description' => $commonFields['description'],
-                        'model_type' => $commonFields['model_type'],
-                        'model_id' => $commonFields['model_id'],
-                    ],
-                ],
-            ],
-        ],
-        'show' => [
-            'cards' => [
+    ],
+    'form' => [
+        'sections' => [
+            [
+                'titleform' => 'Detail PUM',
                 'fields' => [
-                    'advance_number' => $commonFields['advance_number'],
                     'amount' => [
                         'label' => 'Jumlah PUM',
                         'type' => 'number',
                     ],
                     'description' => $commonFields['description'],
+                ],
+            ],
+            [
+                'titleform' => 'Tujuan Advance',
+                'fields' => [
                     'model_type' => $commonFields['model_type'],
                     'model_id' => $commonFields['model_id'],
-                    'created_by' => $commonFields['created_by'],
                 ],
             ],
         ],
-    ];
+    ],
+    'show' => [
+        'cards' => [
+            'fields' => [
+                'advance_reg_no' => $commonFields['advance_reg_no'],
+                'amount' => [
+                    'label' => 'Jumlah PUM',
+                    'type' => 'number',
+                ],
+                'description' => $commonFields['description'],
+                'model_type' => $commonFields['model_type'],
+                'model_id' => $commonFields['model_id'],
+                'created_by' => $commonFields['created_by'],
+            ],
+        ],
+    ],
+];

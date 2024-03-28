@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class SidebarController extends Controller
 {
-    public function index()
+    public function getSidebar()
     {
         $sidebarItems = Cache::remember('sidebar_items', 60, function () {
             return SidebarItem::with('children')->whereNull('parent_id')->get();
@@ -16,6 +16,4 @@ class SidebarController extends Controller
     
         return response()->json($sidebarItems);
     }
-    
-    
 }

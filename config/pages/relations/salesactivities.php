@@ -2,7 +2,7 @@
 
 return [
     'model' => App\Models\SalesActivity::class,
-    'title' => 'Aktivitas Sales',
+    'title' => 'Kegiatan Sales',
     'entity' => 'salesactivities',
     'query' => true,
     'relationship' => ['deals', 'creator'],

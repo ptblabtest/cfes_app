@@ -13,6 +13,7 @@ import CurrencyInput from "./CurrencyInput";
 import ModelInput from "./ModelInput";
 
 const RenderInput = ({ name, fieldConfig, value, onChange }) => {
+
     switch (fieldConfig.type) {
         case "model":
             return (
@@ -22,7 +23,7 @@ const RenderInput = ({ name, fieldConfig, value, onChange }) => {
                     onChange={onChange}
                     fieldConfig={fieldConfig}
                 />
-            );   
+            );
         case "text":
             return (
                 <TextInput
@@ -115,15 +116,15 @@ const RenderInput = ({ name, fieldConfig, value, onChange }) => {
                     fieldConfig={fieldConfig}
                 />
             );
-            case "currency":
-                return (
-                    <CurrencyInput
-                        name={name}
-                        value={value}
-                        onChange={onChange}
-                        fieldConfig={fieldConfig}
-                    />
-                );
+        case "currency":
+            return (
+                <CurrencyInput
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    fieldConfig={fieldConfig}
+                />
+            );
         default:
             return null;
     }

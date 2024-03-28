@@ -2,7 +2,7 @@
 
 return [
     'model' => App\Models\ProjectActivity::class,
-    'title' => 'Aktivitas Project',
+    'title' => 'Kegiatan Project',
     'entity' => 'projectactivities',
     'query' => true,
     'relationship' => ['project', 'creator'],

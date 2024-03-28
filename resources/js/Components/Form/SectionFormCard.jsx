@@ -1,71 +1,27 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import InputRenderer from "@/Components/Render/InputRenderer";
-import { SubmitButton } from "@/Components/Button/SubmitButton";
-import ConfirmationModal from "@/Components/Modal/ConfirmationModal";
+import React, { useMemo } from 'react';
+import InputRenderer from '@/Components/Render/InputRenderer';
+import { SubmitButton } from '@/Components/Button/SubmitButton';
+import ConfirmationModal from '@/Components/Modal/ConfirmationModal';
+import { useFormData } from '@/Hooks/useFormData'; 
+import { useFormSubmission } from '@/Hooks/useFormSubmission';
 
 const SectionFormCard = ({ item, entity, sections }) => {
-    const isEditMode = item && item.id !== undefined;
-    const apiUrlPrefix = '/api';
-    const storeUrl = `${apiUrlPrefix}/${entity}`;
-    const updateUrl = isEditMode ? `${apiUrlPrefix}/${entity}/update/${item.id}` : storeUrl;
-
-    // Modified initializeFormData to incorporate URL parameters directly
-    const initializeFormData = () => {
-        const formData = {};
-        const urlParams = new URLSearchParams(window.location.search); // Get URL parameters
-        sections.forEach((section) => {
-            Object.keys(section.fields).forEach((fieldName) => {
-                // Prioritize URL parameter if available, otherwise fallback to item data or default to ""
-                formData[fieldName] = urlParams.get(fieldName) !== null ? urlParams.get(fieldName) :
-                                      item && item[fieldName] !== undefined ? item[fieldName] : "";
+    const initialFields = useMemo(() => {
+        return sections.reduce((acc, section) => {
+            Object.keys(section.fields).forEach(fieldName => {
+                acc[fieldName] = item && item[fieldName] !== undefined ? item[fieldName] : "";
             });
-        });
-        return formData;
-    };
+            return acc;
+        }, {});
+    }, [sections, item]);
 
-    const [form, setForm] = useState({
-        data: initializeFormData(),
-        errors: {},
-    });
+    const [form, handleInputChange, setForm] = useFormData(initialFields, item);
+    const isEditMode = item && item.id !== undefined;
+    const storeUrl = `/${entity}`;
+    const updateUrl = isEditMode ? `${storeUrl}/update/${item.id}` : storeUrl;
+    const handleSubmit = useFormSubmission(storeUrl, updateUrl, isEditMode, setForm);
 
-    const handleInputChange = (e) => {
-        const { name, value, type, files } = e.target;
-        setForm((prevForm) => ({
-            ...prevForm,
-            data: {
-                ...prevForm.data,
-                [name]: type === "file" ? files[0] : value,
-            },
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        let formData = new FormData();
-        Object.keys(form.data).forEach((key) => {
-            const value = form.data[key];
-            formData.append(key, value instanceof File ? value : value);
-        });
-
-        // Include _method 'PATCH' in formData if in edit mode
-        if (isEditMode) {
-            formData.append('_method', 'PATCH');
-        }
-
-        try {
-            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
-            const response = await axios.post(isEditMode ? updateUrl : storeUrl, formData, config);
-            console.log(response.data);
-            window.history.back();
-        } catch (error) {
-            if (error.response && error.response.data.errors) {
-                setForm(prevForm => ({ ...prevForm, errors: error.response.data.errors }));
-            }
-        }
-    };
-
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [showConfirmationModal, setShowConfirmationModal] = React.useState(false);
 
     return (
         <>
@@ -78,18 +34,15 @@ const SectionFormCard = ({ item, entity, sections }) => {
                     )}
                     {section.subtitleform && (
                         <p className="mt-1 text-sm leading-6 text-gray-600">
-                            {section.subtitleform
-                                .split("\n")
-                                .map((line, idx) => (
-                                    <React.Fragment key={idx}>
-                                        {line}
-                                        <br />
-                                    </React.Fragment>
-                                ))}
+                            {section.subtitleform.split("\n").map((line, idx) => (
+                                <React.Fragment key={idx}>
+                                    {line}<br />
+                                </React.Fragment>
+                            ))}
                         </p>
                     )}
-                    <hr className="my-1 border-gray-100 dark:border-gray-600" />
-                    {Object.keys(section.fields).map((fieldName) => (
+                    <hr className="my-1 border-gray-200 dark:border-gray-600" />
+                    {Object.keys(section.fields).map(fieldName => (
                         <div key={fieldName} className="mb-3">
                             <InputRenderer
                                 name={fieldName}
@@ -105,7 +58,7 @@ const SectionFormCard = ({ item, entity, sections }) => {
                             )}
                         </div>
                     ))}
-                    <hr className="my-5 border-slate-500 dark:border-gray-600" />
+                    <hr className="my-5 border-gray-200 dark:border-gray-600" />
                 </React.Fragment>
             ))}
             <div className="flex items-center justify-between">
@@ -118,7 +71,10 @@ const SectionFormCard = ({ item, entity, sections }) => {
             </div>
             <ConfirmationModal
                 isOpen={showConfirmationModal}
-                onConfirm={handleSubmit}
+                onConfirm={() => {
+                    handleSubmit(form, setForm);
+                    setShowConfirmationModal(false);
+                }}
                 onCancel={() => setShowConfirmationModal(false)}
                 entity={entity}
                 isEdit={isEditMode}

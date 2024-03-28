@@ -5,18 +5,14 @@ return [
     'title' => 'Implementasi',
     'parent' => 'project_id',
     'relationship' => ['deals', 'creator', 'location', 'product'],
-    'view' => [
-        'index' => 'Display/Index/Index',
-        'form' => 'Display/Form/Form',
-        'show' => 'Display/Show/Show',
-    ],
     'index' => [
         'tables' => [
             'fields' => [
+                'id' => $commonFields['id'],
+                'project_reg_no' => $commonFields['project_reg_no'],
                 'title' => ['label' => 'Judul Project', 'type' => 'text'],
                 'product_id' => $commonFields['product_id'],
                 'location_id' => $commonFields['location_id'],
-                'deal_id' => $commonFields['deal_id'],
                 'amount' => [
                     'label' => 'Nilai Project',
                     'type' => 'currency',
@@ -30,12 +26,6 @@ return [
     ],
     'form' => [
         'sections' => [
-            [
-                'titleform' => 'Pilih Kesepakatan',
-                'fields' => [
-                    'deal_id' => $commonFields['deal_id'],
-                ],
-            ],
             [
                 'titleform' => 'Informasi Project',
                 'subtitleform' => 'Bagian ini berisi detail mengenai proyek yang sedang atau akan dikerjakan',
@@ -55,15 +45,21 @@ return [
                     'end_date' => $commonFields['end_date'],
                 ],
             ],
+            [
+                'titleform' => 'Pilih Kesepakatan',
+                'fields' => [
+                    'deal_id' => $commonFields['deal_id'],
+                ],
+            ],
         ],
     ],
     'show' => [
         'cards' => [
             'fields' => [
+                'project_reg_no' => $commonFields['project_reg_no'],
                 'title' => ['label' => 'Nama Project', 'type' => 'text'],
-                'location_id' => $commonFields['location_id'],
-                'deal_id' => $commonFields['deal_id'],
                 'product_id' => $commonFields['product_id'],
+                'location_id' => $commonFields['location_id'],
                 'amount' => [
                     'label' => 'Nilai Project',
                     'type' => 'currency',
@@ -71,6 +67,7 @@ return [
                 ],
                 'start_date' => $commonFields['start_date'],
                 'end_date' => $commonFields['end_date'],
+                'deal_id' => $commonFields['deal_id'],
             ],
         ],
     ],

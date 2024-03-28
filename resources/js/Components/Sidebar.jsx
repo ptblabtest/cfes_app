@@ -14,10 +14,9 @@ function Sidebar() {
     const [sidebarConfig, setSidebarConfig] = useState([]);
 
     useEffect(() => {
-        // Fetch the sidebar configuration from the backend on component mount
         const fetchSidebarConfig = async () => {
             try {
-                const response = await fetch("/api/sidebar"); // Update '/api/sidebar' with your actual API endpoint
+                const response = await fetch("/api/sidebar");
                 const config = await response.json();
                 setSidebarConfig(config);
             } catch (error) {
@@ -26,7 +25,7 @@ function Sidebar() {
         };
 
         fetchSidebarConfig();
-    }, []); // This effect runs once on mount
+    }, []);
 
     return (
         <div className="bg-teal-50">

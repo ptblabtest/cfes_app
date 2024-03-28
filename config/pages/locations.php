@@ -4,11 +4,6 @@ return [
     'model' => App\Models\Location::class,
     'title' => 'Lokasi',
     'relationship' => [],
-    'view' => [
-        'index' => 'Display/Index/Index',
-        'form' => 'Display/Form/Form',
-        'show' => 'Display/Show/Show',
-    ],
     'index' => [
         'tables' => [
             'fields' => [
@@ -76,5 +71,5 @@ return [
             ],
         ],
     ],
-    
+
 ];

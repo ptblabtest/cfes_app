@@ -1,6 +1,26 @@
 <?php
 
 return [
+    'id' => [
+        'label' => 'No',
+        'type' => 'text'
+    ],
+    'sales_reg_no' => [
+        'label' => 'No Kesepakatan',
+        'type' => 'text',
+    ],
+    'expense_reg_no' => [
+        'label' => 'No Biaya',
+        'type' => 'text',
+    ],
+    'project_reg_no' => [
+        'label' => 'No Implementasi',
+        'type' => 'text',
+    ],
+    'advance_reg_no' => [
+        'label' => 'No PUM',
+        'type' => 'text',
+    ],
     'longitude' => [
         'label' => 'Koordinat X',
         'type' => 'text',
@@ -115,7 +135,7 @@ return [
     ],
 
     // cek lagi
-    
+
 
     'advance_number' => [
         'label' => 'Nomor Advance',

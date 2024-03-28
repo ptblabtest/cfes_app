@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\HasApproval;
 use App\Traits\HasCreator;
+use App\Traits\HasDocument;
+use App\Traits\NotifyModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
@@ -13,10 +15,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Lead extends Model implements HasMedia
 {
-    use HasFactory;
-    use LogsActivity;
-    use InteractsWithMedia;
-    use HasCreator, HasApproval;
+    use HasFactory, LogsActivity, InteractsWithMedia, HasCreator, HasApproval, HasDocument, NotifyModel;
 
     protected $fillable = [
         'name', 'email', 'phone', 'product_id', 'source', 'created_by'
@@ -59,4 +58,5 @@ class Lead extends Model implements HasMedia
             ->useLogName($logName)
             ->logFillable();
     }
+    
 }

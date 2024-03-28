@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "@inertiajs/react";
 import ItemRenderer from "../Render/ItemRenderer";
 
 const TableRow = ({ item, fields, entity }) => {
@@ -9,16 +8,16 @@ const TableRow = ({ item, fields, entity }) => {
     return (
         <tr className="hover:bg-gray-100">
             {Object.keys(fields).map((fieldKey, index) => (
-                <td key={fieldKey} className="px-4 py-2 text-left whitespace-nowrap">
+                <td key={fieldKey} className="px-4 py-2 text-left whitespace-normal break-words">
                     {index === 0 ? (
-                        <Link href={showUrl} className="font-bold text-left cursor-pointer">
+                        <a href={showUrl} className="font-bold text-left cursor-pointer">
                             <ItemRenderer
                                 item={item}
                                 fieldKey={fieldKey}
                                 fieldConfig={fields[fieldKey]}
                                 imageSize={imageSize}
                             />
-                        </Link>
+                        </a>
                     ) : (
                         <ItemRenderer
                             item={item}

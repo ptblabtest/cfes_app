@@ -1,12 +1,11 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, usePage } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import HeaderTitle from "@/Components/Header/HeaderTitle";
 import FormCard from "@/Components/Form/FormCard";
 import SectionFormCard from "@/Components/Form/SectionFormCard";
 
-const Form = ({ entity, item, fields, sections, title }) => {
-    const { auth } = usePage().props;
+const Form = ({ entity, item, fields, sections, title, auth }) => {
 
     return (
         <AuthenticatedLayout user={auth.user}>

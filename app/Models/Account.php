@@ -11,7 +11,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Account extends Model
 {
     use HasFactory;
-    use LogsActivity;  
+    use LogsActivity;
     use InteractsWithMedia;
 
     public $timestamps = false;
@@ -20,15 +20,19 @@ class Account extends Model
         'account_number', 'name', 'type'
     ];
 
-    public function expenses()
+    public function accountItems()
     {
-        return $this->hasMany(Expense::class);
+        return $this->hasMany(AccountItem::class);
     }
 
-    public function budgets()
+    public function getCreditAttribute(): float
     {
-        return $this->hasMany(Budget::class);
+        return $this->accountItems()->with('expenses')->get()->sum(function ($accountItem) {
+            return $accountItem->expenses->sum('amount');
+        });
     }
+    
+    protected $appends = ['credit'];
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;

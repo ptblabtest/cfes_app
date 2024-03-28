@@ -24,4 +24,7 @@ return[
         'smallLabel' => 'Estimasi nilai pendapatan dari kesepakatan ini. Isi dalam Rp.',
         'validation' => 'nullable|numeric',
     ],
+    'credit' => [
+        'label' => 'Credit', 'type' => 'currency'
+    ],
 ];

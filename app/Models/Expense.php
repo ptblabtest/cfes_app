@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HandleModelMorph;
 use App\Traits\HasCreator;
+use App\Traits\HasUniqueNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
@@ -15,8 +16,9 @@ class Expense extends Model
     use LogsActivity;
     use HasCreator;
     use HandleModelMorph;
+    use HasUniqueNumber;
     
-    protected $fillable = ['account_item_id', 'amount' ,'date', 'description', 'model_type', 'model_id', 'advance_id', 'created_by'];
+    protected $fillable = ['account_item_id', 'amount' ,'date', 'description', 'model_type', 'model_id', 'advance_id', 'created_by', 'expense_reg_no'];
 
     public function accountitem()
     {
@@ -26,6 +28,17 @@ class Expense extends Model
     public function advance()
     {
         return $this->belongsTo(Advance::class, 'advance_id');
+    }
+
+    public function getUniqueNumberConfig()
+    {
+        return [
+            'field' => 'expense_reg_no',
+            'format' => [
+                'prefix' => 'EX-',
+                'size' => 4,
+            ],
+        ];
     }
 
     protected static $logFillable = true;

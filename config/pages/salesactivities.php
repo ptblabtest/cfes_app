@@ -2,16 +2,13 @@
 
 return [
     'model' => App\Models\SalesActivity::class,
-    'title' => 'Aktivitas Penjualan',
+    'title' => 'Kegiatan Sales',
     'relationship' => ['deals', 'creator'],
-    'view' => [
-        'index' => 'Display/Index/Index',
-        'form' => 'Display/Form/Form',
-        'show' => 'Display/Show/Show',
-    ],
     'index' => [
         'tables' => [
             'fields' => [
+                'id' => $commonFields['id'],
+               // 'salesact_reg_no' => $commonFields['salesact_reg_no'],
                 'deal_id' => $commonFields['deal_id'],
                 'sales_type' => $commonFields['sales_type'],
                 'notes' => $commonFields['notes'],
@@ -23,21 +20,22 @@ return [
     ],
     'form' => [
         'fields' => [
-            'deal_id' => $commonFields['deal_id'],
             'start_date' => $commonFields['start_date'],
             'end_date' => $commonFields['end_date'],
             'sales_type' => $commonFields['sales_type'],
             'notes' => $commonFields['notes'],
+            'deal_id' => $commonFields['deal_id'],
         ],
     ],
     'show' => [
         'cards' => [
             'fields' => [
-                'deal_id' => $commonFields['deal_id'],
-                'start_date' => $commonFields['start_date'],
-                'end_date' => $commonFields['end_date'],
+                 // 'salesact_reg_no' => $commonFields['salesact_reg_no'],
                 'sales_type' => $commonFields['sales_type'],
                 'notes' => $commonFields['notes'],
+                'start_date' => $commonFields['start_date'],
+                'end_date' => $commonFields['end_date'],
+                'deal_id' => $commonFields['deal_id'],
                 'created_by' => $commonFields['created_by'],
             ],
         ],

@@ -4,11 +4,6 @@ return [
     'model' => App\Models\AccountItem::class,
     'title' => 'Item Akun',
     'relationship' => ['account'],
-    'view' => [
-        'index' => 'Display/Index/Index',
-        'form' => 'Display/Form/Form',
-        'show' => 'Display/Show/Show',
-    ],
     'index' => [
         'tables' => [
             'fields' => [

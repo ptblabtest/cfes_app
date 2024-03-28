@@ -48,7 +48,7 @@ class OptionTableSeeder extends Seeder
                 ],
             ],
             'project_type' => [
-                'label' => 'Tipe Aktivitas',
+                'label' => 'Tipe Kegiatan',
                 'type' => 'select',
                 'options' => [
                     ['value' => 'Pelatihan', 'label' => 'Pelatihan'],

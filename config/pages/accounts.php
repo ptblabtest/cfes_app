@@ -3,12 +3,7 @@
 return [
     'model' => App\Models\Account::class,
     'title' => 'Chart of Accounts (COA)',
-    'relationship' => [],
-    'view' => [
-        'index' => 'Display/Index/Index',
-        'form' => 'Display/Form/Form',
-        'show' => 'Display/Show/Show',
-    ],
+    'relationship' => ['accountItems'],
     'index' => [
         'tables' => [
             'fields' => [
@@ -19,9 +14,10 @@ return [
                 'type' => [
                     'label' => 'Tipe Akun', 'type' => 'text'
                 ],
-                'credit' => [
-                    'label' => 'Credit', 'type' => 'text'
+                'debit' => [
+                    'label' => 'Debit', 'type' => 'text'
                 ],
+                'credit' => $commonFields['credit'],
                 'is_active' => $commonFields['is_active'],
             ],
         ],
@@ -47,6 +43,10 @@ return [
                 'type' => [
                     'label' => 'Tipe Akun', 'type' => 'text'
                 ],
+                'debit' => [
+                    'label' => 'Debit', 'type' => 'text'
+                ],
+                'credit' => $commonFields['credit'],
                 'is_active' => $commonFields['is_active'],
             ],
         ],

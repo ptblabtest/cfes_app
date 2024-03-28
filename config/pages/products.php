@@ -2,18 +2,14 @@
 
 return [
     'model' => App\Models\Product::class,
-    'title' => 'Produk',
+    'title' => 'Program',
     'relationship' => [],
-    'view' => [
-        'index' => 'Display/Index/Index',
-        'form' => 'Display/Form/Form',
-        'show' => 'Display/Show/Show',
-    ],
     'index' => [
         'tables' => [
             'fields' => [
+                'id' => $commonFields['id'],
                 'name' => [
-                    'label' => 'Nama Produk', 'type' => 'text'
+                    'label' => 'Nama Program', 'type' => 'text'
                 ],
                 'description' => [
                     'label' => 'Deskripsi', 'type' => 'text'
@@ -27,7 +23,7 @@ return [
     'form' => [
         'fields' => [
             'name' => [
-                'label' => 'Nama Produk', 'type' => 'text'
+                'label' => 'Nama Program', 'type' => 'text'
             ],
             'description' => [
                 'label' => 'Deskripsi', 'type' => 'text'
@@ -41,7 +37,7 @@ return [
         'cards' => [
             'fields' => [
                 'name' => [
-                    'label' => 'Nama Produk', 'type' => 'text'
+                    'label' => 'Nama Program', 'type' => 'text'
                 ],
                 'description' => [
                     'label' => 'Deskripsi', 'type' => 'text'

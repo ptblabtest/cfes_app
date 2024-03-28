@@ -27,7 +27,7 @@ class ApiController extends Controller
         $this->config = Config::get("pages");
     }
 
-    public function index($entity)
+    public function getItems($entity)
     {
         $config = $this->config[$entity] ?? null;
         if (!$config) {
@@ -47,7 +47,7 @@ class ApiController extends Controller
         ]);
     }
 
-    public function show($entity, $id)
+    public function getItem($entity, $id)
     {
         $config = $this->config[$entity] ?? null;
         if (!$config) {

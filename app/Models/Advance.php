@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HandleModelMorph;
 use App\Traits\HasCreator;
+use App\Traits\HasUniqueNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
@@ -11,17 +12,25 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Advance extends Model
 {
-    use HasFactory;
-    use LogsActivity;
-    use HasCreator;
-    use HandleModelMorph;
+    use HasFactory, LogsActivity, HasCreator, HandleModelMorph, HasUniqueNumber;
 
     protected $fillable = [
-        'advance_number', 'amount', 'description', 'model_type', 'model_id', 'created_by'
+        'advance_reg_no', 'amount', 'description', 'model_type', 'model_id', 'created_by'
     ];
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
+
+    public function getUniqueNumberConfig()
+    {
+        return [
+            'field' => 'advance_reg_no',
+            'format' => [
+                'prefix' => 'PUM-',
+                'size' => 4,
+            ],
+        ];
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -37,19 +46,12 @@ class Advance extends Model
 
     public function expenses()
     {
-        // Assuming the related model is 'Expense' and it has 'advance_id' as foreign key
         return $this->hasMany(Expense::class, 'advance_id');
     }
 
-    // Accessor for expenses_total
     public function getExpensesTotalAttribute(): float
     {
         return $this->expenses()->sum('amount');
     }
-
-
-
-
-
 
 }

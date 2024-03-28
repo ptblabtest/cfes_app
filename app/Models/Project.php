@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasCreator;
 use App\Traits\HasDocument;
 use App\Traits\HasFinancials;
+use App\Traits\HasUniqueNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
@@ -13,12 +14,10 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Project extends Model
 {
-    use HasFactory;
-    use LogsActivity;
-    use HasCreator, HasFinancials, HasDocument;
+    use HasFactory, LogsActivity, HasCreator, HasFinancials, HasDocument, HasUniqueNumber;
 
     protected $fillable = [
-        'title', 'location_id', 'product_id', 'parent_id', 'deal_id', 'amount', 'start_date', 'expected_close_date', 'status', 'created_by'
+        'title', 'location_id', 'product_id', 'parent_id', 'deal_id', 'amount', 'start_date', 'end_date', 'status', 'created_by', 'project_reg_no'
     ];
 
     public function deals()
@@ -39,6 +38,25 @@ class Project extends Model
     public function projectActivities()
     {
         return $this->hasMany(ProjectActivity::class, 'project_id');
+    }
+
+    public function getCombinedIdAttribute()
+    {
+        $locationName = $this->location ? $this->location->forest_name : 'NoLocation';
+        return $this->project_reg_no . ' - ' . $locationName;
+    }
+    
+    protected $appends = ['combined_id'];
+
+    public function getUniqueNumberConfig()
+    {
+        return [
+            'field' => 'project_reg_no',
+            'format' => [
+                'prefix' => 'PRO-',
+                'size' => 4,
+            ],
+        ];
     }
 
     protected static $logFillable = true;

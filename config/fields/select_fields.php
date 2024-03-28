@@ -26,7 +26,7 @@ return [
         },
     ],
     'project_type' => [
-        'label' => 'Tipe Aktivitas',
+        'label' => 'Tipe Kegiatan',
         'type' => 'select',
         'options' => function () {
             return Option::where('key', 'project_type')

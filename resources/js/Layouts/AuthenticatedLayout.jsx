@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import Sidebar from "@/Components/Sidebar";
 import { UserIcon } from "@heroicons/react/20/solid";
+import Notifications from "@/Components/Notifications";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+
+    const { auth } = usePage().props;
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -16,9 +19,7 @@ export default function Authenticated({ user, header, children }) {
                 <div className="max-w-12xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <div className="flex items-center">
-                            <Sidebar 
-                            
-                            />
+                            <Sidebar />
                         </div>
                         <div className="flex-grow flex justify-center items-center">
                             <Link href="/">
@@ -26,6 +27,11 @@ export default function Authenticated({ user, header, children }) {
                             </Link>
                         </div>
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
+                        <div className="flex-grow flex items-center justify-center">
+                            <div className="flex items-center">
+                            <Notifications
+                                notifications={auth.user.notifications}
+                            />
                             <div className="ms-3 relative z-50">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -34,7 +40,6 @@ export default function Authenticated({ user, header, children }) {
                                                 type="button"
                                                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-teal-50 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
                                             >
-                                            
                                                 {user.name}
 
                                                 <svg
@@ -74,6 +79,8 @@ export default function Authenticated({ user, header, children }) {
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
+                            </div>
+                            </div>
                             </div>
                         </div>
 

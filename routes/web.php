@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisplayController;
 
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\NotificationController;
 
 // Routes that do not require authentication
 Route::get('/', function () {
@@ -48,6 +49,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/{entity}/show/{id}', [DisplayController::class, 'show'])->name('entity.show');
     Route::get('/{entity}/create', [DisplayController::class, 'create']);
     Route::get('/{entity}/edit/{id}', [DisplayController::class, 'edit'])->name('entity.edit');
+    Route::post('/{entity}', [DisplayController::class, 'store']);
+    Route::patch('/{entity}/update/{id}', [DisplayController::class, 'update']);
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/markAsRead', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 
     Route::get('/permissions', [PermissionController::class, 'index']);
     Route::post('/permissions/change-role', [PermissionController::class, 'changeRole']);

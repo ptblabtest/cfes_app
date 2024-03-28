@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasCreator;
 use App\Traits\HasDocument;
-use App\Traits\HasFinancials;
+use App\Traits\HasUniqueNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
@@ -17,10 +17,10 @@ class Deal extends Model implements HasMedia
     use HasFactory;
     use LogsActivity;
     use InteractsWithMedia;
-    use HasCreator, HasDocument;
+    use HasCreator, HasDocument, HasUniqueNumber;
 
     protected $fillable = [
-        'potential_revenue', 'expected_close_date', 'description', 'sales_status', 'lead_id', 'customer_id', 'created_by'
+        'sales_reg_no', 'potential_revenue', 'expected_close_date', 'description', 'lead_id', 'customer_id', 'created_by', 
     ];
 
     public function lead()
@@ -40,14 +40,22 @@ class Deal extends Model implements HasMedia
 
     public function getCombinedIdAttribute()
     {
-        // Example: Including a 'name' attribute from a related 'customer' model
-        // Ensure there's a relationship defined in this model to 'customer'
         $customerName = $this->customer ? $this->customer->name : 'NoCustomer';
-        return $this->id . '-' . $customerName;
+        return $this->sales_reg_no . ' - ' . $customerName;
     }
     
-
     protected $appends = ['combined_id'];
+
+    public function getUniqueNumberConfig()
+    {
+        return [
+            'field' => 'sales_reg_no',
+            'format' => [
+                'prefix' => 'DLS-',
+                'size' => 4,
+            ],
+        ];
+    }
 
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;

@@ -26,7 +26,15 @@ class AppServiceProvider extends ServiceProvider
                     'user' => auth()->user() ? [
                         'id' => auth()->user()->id,
                         'name' => auth()->user()->name,
-                        'email' => auth()->user()->email
+                        'email' => auth()->user()->email,
+                        'notifications' => auth()->user()->notifications()->get()->map(function ($notification) {
+                            return [
+                                'id' => $notification->id,
+                                'type' => $notification->type,
+                                'data' => $notification->data,
+                                'read_at' => $notification->read_at,
+                            ];
+                        }),
                     ] : null,
                 ];
             },

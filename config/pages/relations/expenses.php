@@ -2,7 +2,7 @@
 
 return [
     'model' => App\Models\Expense::class,
-    'title' => 'Biaya Sales',
+    'title' => 'Biaya',
     'entity' => 'expenses',
     'relationship' => ['accountitem', 'creator'],
     'query' => true,

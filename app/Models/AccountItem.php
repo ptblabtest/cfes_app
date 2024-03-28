@@ -19,6 +19,11 @@ class AccountItem extends Model
         return $this->belongsTo(Account::class, 'account_id');
     }
 
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'account_item_id');
+    }
+    
     protected static $logFillable = true;
     protected static $logOnlyDirty = true;
 

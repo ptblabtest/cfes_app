@@ -4,18 +4,15 @@ return [
     'model' => App\Models\Operational::class,
     'title' => 'Operasional',
     'relationship' => ['creator', 'documents'],
-    'view' => [
-        'index' => 'Display/Index/Index',
-        'form' => 'Display/Form/Form',
-        'show' => 'Display/Show/Show',
-    ],
     'index' => [
         'tables' => [
             'fields' => [
-                'start_date' => $commonFields['start_date'],
-                'end_date' => $commonFields['end_date'],
+                'id' => $commonFields['id'],
+                // 'ops_reg_no' => $commonFields['ops_reg_no'],
                 'project_type' => $commonFields['project_type'],
                 'notes' => $commonFields['notes'],
+                'start_date' => $commonFields['start_date'],
+                'end_date' => $commonFields['end_date'],
                 'created_by' => $commonFields['created_by'],
             ],
         ],
@@ -31,10 +28,11 @@ return [
     'show' => [
         'cards' => [
             'fields' => [
-                'start_date' => $commonFields['start_date'],
-                'end_date' => $commonFields['end_date'],
+                // 'ops_reg_no' => $commonFields['ops_reg_no'],
                 'project_type' => $commonFields['project_type'],
                 'notes' => $commonFields['notes'],
+                'start_date' => $commonFields['start_date'],
+                'end_date' => $commonFields['end_date'],
                 'created_by' => $commonFields['created_by'],
             ],
         ],

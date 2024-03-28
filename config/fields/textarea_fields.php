@@ -69,8 +69,8 @@ return [
         'cols' => '50',
     ],
     'interest' => [
-        'label' => 'Produk yang diminati',
+        'label' => 'Program yang diminati',
         'type' => 'textarea',
-        'smallLabel' => 'Deskripsikan produk atau layanan yang diminati oleh prospek'
+        'smallLabel' => 'Deskripsikan program atau layanan yang diminati oleh prospek'
     ],
 ];
